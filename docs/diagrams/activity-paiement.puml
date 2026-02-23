@@ -1,0 +1,131 @@
+@startuml Diagramme d'Activités - Processus de Paiement (Simplifié)
+
+' Style cohérent avec les autres diagrammes
+!theme plain
+
+' Configuration de base
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+
+' Activités - Style simplifié
+skinparam activityBackgroundColor #E3F2FD
+skinparam activityBorderColor #1976D2
+skinparam activityBorderThickness 2
+skinparam activityFontColor #000000
+skinparam activityFontSize 9
+
+' Points de début/fin - Style simplifié
+skinparam activityStartColor #1976D2
+skinparam activityEndColor #1976D2
+
+' Décisions - Style simplifié
+skinparam activityDiamondBackgroundColor #FFF3E0
+skinparam activityDiamondBorderColor #FF9800
+skinparam activityDiamondBorderThickness 2
+skinparam activityDiamondFontColor #000000
+
+' Notes - Style simplifié
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FF9800
+skinparam noteFontColor #000000
+skinparam noteFontSize 9
+
+' Flèches et connexions - Style Modelio
+skinparam activityArrowColor #424242
+skinparam activityArrowThickness 2
+
+' Titre - Style Modelio
+skinparam titleFontColor #1976D2
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+
+title Diagramme d'Activités - Processus de Paiement (Sans Génération Reçu)
+
+start
+
+:Comptable accède à la section Paiements;
+note right : Interface de gestion\ndes paiements
+
+:Sélectionner facture à régler;
+note right : Liste des factures\nen attente de paiement
+
+if (Facture sélectionnée ?) then (oui)
+    :Afficher détails facture;
+    note right : - Numéro facture\n- Patient\n- Montant total\n- Montant déjà payé\n- Solde restant
+    
+    :Saisir montant à payer;
+    note right : Montant en FCFA
+    
+    if (Montant valide ?) then (oui)
+        if (Montant <= Solde dû ?) then (oui)
+            :Choisir mode de paiement;
+            note right : Options disponibles :\n- Espèces\n- Orange Money\n- Wave\n- Free Money\n- Carte bancaire\n- Virement\n- Chèque
+            
+            switch (Mode de paiement ?)
+            case (Mobile Money)
+                :Saisir numéro téléphone;
+                :Saisir référence opérateur;
+                note right : Référence transaction\nOrange Money/Wave/Free Money
+            case (Carte/Virement)
+                :Saisir numéro de référence;
+                note right : Numéro transaction\nbancaire
+            case (Chèque)
+                :Saisir numéro chèque;
+                note right : Référence du chèque
+            case (Espèces)
+                :Aucune référence requise;
+            endswitch
+            
+            :Ajouter notes (optionnel);
+            note right : Commentaires sur\nle paiement
+            
+            :Valider le paiement;
+            
+            :Enregistrer paiement en base;
+            note right : Création enregistrement\nPayment avec statut "completed"
+            
+            :Calculer nouveau solde facture;
+            
+            if (Solde facture = 0 ?) then (oui)
+                :Mettre à jour statut facture → "paid";
+            else (non)
+                :Mettre à jour statut facture → "partially_paid";
+            endif
+            
+            :Afficher confirmation paiement;
+            note right : Message de succès\navec détails du paiement
+            
+            :Mettre à jour liste des paiements;
+            
+        else (non)
+            :Afficher erreur "Montant supérieur au solde dû";
+            stop
+        endif
+        
+    else (non)
+        :Afficher erreur "Montant invalide";
+        stop
+    endif
+    
+else (non)
+    :Afficher message "Aucune facture sélectionnée";
+    stop
+endif
+
+:Proposer actions suivantes;
+note right : Options :\n- Enregistrer autre paiement\n- Consulter historique\n- Retour à la liste
+
+if (Autre paiement ?) then (oui)
+    :Retour à sélection facture;
+    detach
+else (non)
+    :Fin du processus;
+endif
+
+stop
+
+' Légende des couleurs
+note bottom : Légende :\n- Vert : Début\n- Rouge : Fin/Erreur\n- Orange : Décisions\n- Gris : Activités
+
+@enduml

@@ -1,0 +1,36 @@
+# Core Django
+Django==5.2.4
+asgiref==3.9.1
+sqlparse==0.5.3
+tzdata==2025.2
+
+# Django Extensions
+django-cors-headers==4.7.0
+django-filter==25.1
+django-debug-toolbar==4.4.6
+
+# REST Framework
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.1
+PyJWT==2.10.1
+
+# Database
+mysqlclient==2.2.7
+
+# File Processing
+reportlab==4.4.3
+Pillow==10.4.0
+
+# Email
+django-anymail==10.3
+
+# DICOM Medical Imaging
+pydicom==2.4.4
+numpy==1.26.4
+opencv-python==4.10.0.84
+scipy==1.13.1
+matplotlib==3.8.4
+
+# Utilities
+charset-normalizer==3.4.2
+python-decouple==3.8

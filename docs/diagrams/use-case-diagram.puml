@@ -1,0 +1,199 @@
+@startuml Diagramme de Cas d'Utilisation - Radio-Fact
+
+' Style cohérent avec le diagramme d'activité patient
+!theme plain
+
+' Configuration générale
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+
+' Acteurs - Style simplifié
+skinparam actor {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+    BorderThickness 2
+    FontColor #000000
+    FontStyle bold
+}
+
+' Cas d'utilisation - Style simplifié
+skinparam usecase {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+    BorderThickness 2
+    FontColor #000000
+    FontSize 9
+}
+
+' Packages - Style simplifié
+skinparam package {
+    BackgroundColor #F5F5F5
+    BorderColor #757575
+    BorderThickness 2
+    FontColor #424242
+    FontStyle bold
+}
+
+' Relations - Style Modelio
+skinparam arrow {
+    Color #424242
+    Thickness 2
+}
+
+' Titre - Style Modelio
+skinparam titleFontColor #1976D2
+skinparam titleFontSize 16
+skinparam titleFontStyle bold
+
+title Diagramme de Cas d'Utilisation - Système Radio-Fact
+
+' Acteurs
+actor "Administrateur" as Admin #lightblue
+actor "Secrétaire" as Secretary #lightgreen
+actor "Comptable" as Accountant #lightyellow
+actor "Docteur" as Doctor #lightpink
+actor "Patient" as Patient #lightcyan
+
+' Système
+rectangle "Système Radio-Fact" {
+
+    ' Cas d'utilisation - Gestion des Patients
+    package "Gestion des Patients" #aliceblue {
+        usecase "Enregistrer nouveau patient" as UC1
+        usecase "Modifier informations patient" as UC2
+        usecase "Consulter dossier patient" as UC3
+        usecase "Rechercher patient" as UC4
+        usecase "Supprimer patient" as UC5
+    }
+
+    ' Cas d'utilisation - Gestion des Examens
+    package "Gestion des Examens" #lavender {
+        usecase "Créer type d'examen" as UC6
+        usecase "Modifier prix examen" as UC7
+        usecase "Activer/Désactiver examen" as UC8
+        usecase "Consulter catalogue examens" as UC9
+    }
+
+    ' Cas d'utilisation - Facturation
+    package "Facturation" #honeydew {
+        usecase "Créer facture" as UC10
+        usecase "Ajouter examens à facture" as UC11
+        usecase "Modifier facture" as UC12
+        usecase "Consulter factures" as UC13
+        usecase "Générer PDF facture" as UC14
+        usecase "Envoyer facture patient" as UC15
+    }
+
+    ' Cas d'utilisation - Paiements
+    package "Gestion des Paiements" #mistyrose {
+        usecase "Enregistrer paiement" as UC16
+        usecase "Choisir mode paiement" as UC17
+        usecase "Générer reçu" as UC18
+        usecase "Consulter historique paiements" as UC19
+        usecase "Gérer paiements partiels" as UC20
+    }
+
+    ' Cas d'utilisation - Rapports Médicaux
+    package "Rapports Médicaux" #lightcyan {
+        usecase "Téléverser compte rendu" as UC21
+        usecase "Valider rapport médical" as UC22
+        usecase "Consulter rapports patient" as UC23
+        usecase "Télécharger rapport" as UC24
+    }
+
+    ' Cas d'utilisation - Accès Patient
+    package "Accès Patient Sécurisé" #lightyellow {
+        usecase "Générer clés d'accès" as UC25
+        usecase "Authentifier patient" as UC26
+        usecase "Consulter ses factures" as UC27
+        usecase "Télécharger ses rapports" as UC28
+        usecase "Vérifier statut paiement" as UC29
+    }
+
+    ' Cas d'utilisation - Rapports et Statistiques
+    package "Rapports et Statistiques" #lightsteelblue {
+        usecase "Générer rapport financier" as UC30
+        usecase "Consulter statistiques patients" as UC31
+        usecase "Analyser revenus examens" as UC32
+        usecase "Exporter données" as UC33
+    }
+
+    ' Cas d'utilisation - Administration Système
+    package "Administration Système" #lightgray {
+        usecase "Gérer utilisateurs" as UC34
+        usecase "Configurer permissions" as UC35
+        usecase "Superviser opérations" as UC36
+        usecase "Maintenir système" as UC37
+    }
+}
+
+' Relations Administrateur
+Admin --> UC2 : gère
+Admin --> UC3 : consulte
+Admin --> UC4 : recherche
+Admin --> UC5 : supprime
+Admin --> UC6 : crée
+Admin --> UC7 : modifie
+Admin --> UC8 : active/désactive
+Admin --> UC9 : consulte
+Admin --> UC13 : supervise
+Admin --> UC30 : génère
+Admin --> UC31 : consulte
+Admin --> UC32 : analyse
+Admin --> UC33 : exporte
+Admin --> UC34 : gère
+Admin --> UC35 : configure
+Admin --> UC36 : supervise
+Admin --> UC37 : maintient
+
+' Relations Secrétaire
+Secretary --> UC1 : enregistre
+Secretary --> UC2 : modifie
+Secretary --> UC3 : consulte
+Secretary --> UC4 : recherche
+Secretary --> UC9 : consulte
+Secretary --> UC13 : consulte
+
+' Relations Comptable
+Accountant --> UC10 : crée
+Accountant --> UC11 : ajoute
+Accountant --> UC12 : modifie
+Accountant --> UC13 : gère
+Accountant --> UC14 : génère
+Accountant --> UC15 : envoie
+Accountant --> UC16 : enregistre
+Accountant --> UC17 : choisit
+Accountant --> UC18 : génère
+Accountant --> UC19 : consulte
+Accountant --> UC20 : gère
+Accountant --> UC25 : génère
+Accountant --> UC30 : génère
+Accountant --> UC32 : analyse
+
+' Relations Docteur
+Doctor --> UC3 : consulte
+Doctor --> UC21 : téléverse
+Doctor --> UC22 : valide
+Doctor --> UC23 : consulte
+Doctor --> UC31 : consulte
+
+' Relations Patient
+Patient --> UC26 : s'authentifie
+Patient --> UC27 : consulte
+Patient --> UC28 : télécharge
+Patient --> UC29 : vérifie
+
+' Relations d'inclusion et d'extension
+UC10 ..> UC25 : <<include>>
+UC16 ..> UC18 : <<include>>
+UC14 ..> UC25 : <<include>>
+UC21 ..> UC25 : <<extend>>
+UC1 ..> UC25 : <<extend>>
+
+' Relations entre cas d'utilisation
+UC11 --> UC9 : utilise
+UC16 --> UC13 : met à jour
+UC25 --> UC26 : permet
+
+@enduml

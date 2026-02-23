@@ -1,0 +1,88 @@
+@startuml Diagramme d'Activités - Accès Patient (Simplifié)
+
+' Style Modelio - Couleurs et apparence professionnelles
+!theme plain
+
+' Couleurs de base Modelio
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+' Activités - Style Modelio
+skinparam activityBackgroundColor #E3F2FD
+skinparam activityBorderColor #1976D2
+skinparam activityBorderThickness 2
+skinparam activityFontColor #000000
+skinparam activityFontSize 10
+
+' Points de début/fin - Style Modelio
+skinparam activityStartColor #1976D2
+skinparam activityEndColor #1976D2
+
+' Décisions (losanges) - Style Modelio
+skinparam activityDiamondBackgroundColor #FFF3E0
+skinparam activityDiamondBorderColor #FF9800
+skinparam activityDiamondBorderThickness 2
+skinparam activityDiamondFontColor #000000
+
+' Notes - Style Modelio
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+skinparam noteFontColor #000000
+skinparam noteFontSize 9
+
+' Flèches et connexions - Style Modelio
+skinparam activityArrowColor #424242
+skinparam activityArrowThickness 2
+
+' Titre - Style Modelio
+skinparam titleFontColor #1976D2
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+
+title Diagramme d'Activités - Accès Patient (Simplifié)
+
+start
+
+:Patient accède au portail patient;
+:Présenter formulaire d'authentification;
+:Saisir identifiants;
+:Valider les identifiants;
+
+if (Identifiants valides ?) then (oui)
+    :Afficher tableau de bord;
+    
+    repeat
+        :Sélectionner une action;
+        
+        if (Action = "Voir factures") then (oui)
+            :Afficher liste des factures;
+            :Sélectionner une facture;
+            :Afficher détails facture;
+        elseif (Action = "Télécharger rapport") then (oui)
+            :Afficher liste des rapports;
+            :Sélectionner un rapport;
+            :Vérifier les droits d'accès;
+            
+            if (Accès autorisé ?) then (oui)
+                :Télécharger le rapport;
+            else (non)
+                :Afficher erreur "Accès refusé";
+            endif
+            
+        endif
+        
+    repeat while (Continuer ?) is (non)
+    -> oui;
+    :Se déconnecter;
+else (non)
+    :Afficher erreur "Identifiants invalides";
+    stop
+endif
+
+stop
+
+' Légende
+note bottom : Légende :\n- Bleu : Début/Fin/Activités\n- Orange : Décisions
+
+@enduml

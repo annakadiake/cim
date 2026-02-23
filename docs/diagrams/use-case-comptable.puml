@@ -1,0 +1,79 @@
+@startuml Cas d'Utilisation - Comptable
+
+!theme plain
+skinparam backgroundColor white
+skinparam actorBackgroundColor #lightyellow
+skinparam actorBorderColor #f57c00
+skinparam usecaseBackgroundColor #f5f5f5
+skinparam usecaseBorderColor #424242
+
+title Diagramme de Cas d'Utilisation - Comptable
+
+' Acteur
+actor "Comptable" as Accountant #lightyellow
+
+' Système
+rectangle "Système Radio-Fact" {
+
+    ' Facturation
+    package "Facturation" #honeydew {
+        usecase "Créer facture" as UC10
+        usecase "Ajouter examens à facture" as UC11
+        usecase "Modifier facture" as UC12
+        usecase "Consulter factures" as UC13
+        usecase "Générer PDF facture" as UC14
+        usecase "Envoyer facture patient" as UC15
+    }
+
+    ' Gestion des Paiements
+    package "Gestion des Paiements" #mistyrose {
+        usecase "Enregistrer paiement" as UC16
+        usecase "Choisir mode paiement" as UC17
+        usecase "Générer reçu" as UC18
+        usecase "Consulter historique paiements" as UC19
+        usecase "Gérer paiements partiels" as UC20
+    }
+
+    ' Accès Patient
+    package "Accès Patient" #lightcyan {
+        usecase "Générer clés d'accès" as UC25
+    }
+
+    ' Rapports Financiers
+    package "Rapports Financiers" #lightsteelblue {
+        usecase "Générer rapport financier" as UC30
+        usecase "Analyser revenus examens" as UC32
+        usecase "Suivre créances" as UC50
+        usecase "Calculer statistiques paiements" as UC51
+    }
+}
+
+' Relations Comptable
+Accountant --> UC10 : crée
+Accountant --> UC11 : ajoute
+Accountant --> UC12 : modifie
+Accountant --> UC13 : gère
+Accountant --> UC14 : génère
+Accountant --> UC15 : envoie
+Accountant --> UC16 : enregistre
+Accountant --> UC17 : choisit
+Accountant --> UC18 : génère
+Accountant --> UC19 : consulte
+Accountant --> UC20 : gère
+Accountant --> UC25 : génère
+Accountant --> UC30 : génère
+Accountant --> UC32 : analyse
+Accountant --> UC50 : suit
+Accountant --> UC51 : calcule
+
+' Relations d'inclusion et d'extension
+UC10 ..> UC25 : <<include>>
+UC16 ..> UC18 : <<include>>
+UC14 ..> UC25 : <<include>>
+
+' Relations entre cas d'utilisation
+UC16 --> UC13 : met à jour
+UC30 --> UC32 : utilise
+UC50 --> UC19 : utilise
+
+@enduml

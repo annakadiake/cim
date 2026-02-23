@@ -1,0 +1,121 @@
+@startuml Diagramme de Cas d'Utilisation - Administrateur (Simplifié)
+
+' Style cohérent avec les autres diagrammes
+!theme plain
+
+' Configuration de base
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+
+' Acteurs - Style simplifié
+skinparam actor {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+    BorderThickness 2
+    FontColor #000000
+    FontStyle bold
+}
+
+' Cas d'utilisation - Style simplifié
+skinparam usecase {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+    BorderThickness 2
+    FontColor #000000
+    FontSize 9
+}
+
+' Packages - Style simplifié
+skinparam package {
+    BackgroundColor #F5F5F5
+    BorderColor #757575
+    BorderThickness 2
+    FontColor #424242
+    FontStyle bold
+}
+
+' Relations - Style Modelio
+skinparam arrow {
+    Color #424242
+    Thickness 2
+}
+
+' Titre - Style Modelio
+skinparam titleFontColor #1976D2
+skinparam titleFontSize 16
+skinparam titleFontStyle bold
+
+title Diagramme de Cas d'Utilisation - Administrateur
+
+' Acteur
+actor "Administrateur" as Admin #lightblue
+
+' Système
+rectangle "Système Radio-Fact" {
+
+    ' Gestion des Patients
+    package "Gestion des Patients" #aliceblue {
+        usecase "Modifier informations patient" as UC2
+        usecase "Consulter dossier patient" as UC3
+        usecase "Rechercher patient" as UC4
+        usecase "Supprimer patient" as UC5
+    }
+
+    ' Gestion des Examens
+    package "Gestion des Examens" #lavender {
+        usecase "Créer type d'examen" as UC6
+        usecase "Modifier prix examen" as UC7
+        usecase "Activer/Désactiver examen" as UC8
+        usecase "Consulter catalogue examens" as UC9
+    }
+
+    ' Supervision Facturation
+    package "Supervision Facturation" #honeydew {
+        usecase "Consulter factures" as UC13
+        usecase "Superviser facturation" as UC36
+    }
+
+    ' Rapports et Statistiques
+    package "Rapports et Statistiques" #lightsteelblue {
+        usecase "Générer rapport financier" as UC30
+        usecase "Consulter statistiques patients" as UC31
+        usecase "Analyser revenus examens" as UC32
+        usecase "Exporter données" as UC33
+    }
+
+    ' Administration Système
+    package "Administration Système" #lightgray {
+        usecase "Gérer utilisateurs" as UC34
+        usecase "Configurer permissions" as UC35
+        usecase "Superviser opérations" as UC37
+        usecase "Maintenir système" as UC38
+    }
+}
+
+' Relations Administrateur
+Admin --> UC2 : gère
+Admin --> UC3 : consulte
+Admin --> UC4 : recherche
+Admin --> UC5 : supprime
+Admin --> UC6 : crée
+Admin --> UC7 : modifie
+Admin --> UC8 : active/désactive
+Admin --> UC9 : consulte
+Admin --> UC13 : supervise
+Admin --> UC36 : supervise
+Admin --> UC30 : génère
+Admin --> UC31 : consulte
+Admin --> UC32 : analyse
+Admin --> UC33 : exporte
+Admin --> UC34 : gère
+Admin --> UC35 : configure
+Admin --> UC37 : supervise
+Admin --> UC38 : maintient
+
+' Relations entre cas d'utilisation
+UC32 --> UC31 : utilise
+UC30 --> UC32 : inclut
+UC33 --> UC30 : exporte
+
+@enduml

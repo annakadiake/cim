@@ -1,0 +1,265 @@
+@startuml Radio-Fact Class Diagram
+
+' Style Modelio - Diagramme de classes professionnel
+!theme plain
+
+' Configuration générale Modelio
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam classAttributeFontSize 9
+skinparam classMethodFontSize 9
+
+' Style des classes - Modelio
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #424242
+    BorderThickness 2
+    FontColor #000000
+    FontStyle bold
+    AttributeFontColor #000000
+    AttributeFontStyle normal
+}
+
+' Styles par stéréotype - Couleurs Modelio
+skinparam class {
+    BackgroundColor<<utilisateur>> #E8F5E8
+    BorderColor<<utilisateur>> #4CAF50
+    BackgroundColor<<patient>> #E3F2FD
+    BorderColor<<patient>> #2196F3
+    BackgroundColor<<examen>> #F3E5F5
+    BorderColor<<examen>> #9C27B0
+    BackgroundColor<<facture>> #FFF3E0
+    BorderColor<<facture>> #FF9800
+    BackgroundColor<<paiement>> #FFEBEE
+    BorderColor<<paiement>> #F44336
+    BackgroundColor<<acces>> #E0F2F1
+    BorderColor<<acces>> #009688
+    BackgroundColor<<rapport>> #E8EAF6
+    BorderColor<<rapport>> #3F51B5
+}
+
+' Relations et flèches - Style Modelio
+skinparam arrow {
+    Color #424242
+    Thickness 2
+}
+
+' Titre - Style Modelio
+skinparam titleFontColor #1976D2
+skinparam titleFontSize 16
+skinparam titleFontStyle bold
+
+' Classes Utilisateurs
+abstract class Utilisateur <<utilisateur>> {
+    +id: int
+    +nomUtilisateur: string
+    +email: string
+    +prenom: string
+    +nom: string
+    +numeroTelephone: string
+    +service: string
+    +estActif: boolean
+    +dateInscription: datetime
+    --
+    +obtenirNomComplet(): string
+    +obtenirUrlTableauBord(): string
+    +obtenirPermissions(): array
+}
+
+class SuperUtilisateur <<utilisateur>> {
+    +gererUtilisateurs(): void
+    +configurerSysteme(): void
+    +accederToutesPermissions(): void
+}
+
+class Administrateur <<utilisateur>> {
+    +gererPatients(): void
+    +gererExamens(): void
+    +superviserOperations(): void
+    +consulterRapports(): void
+}
+
+class Docteur <<utilisateur>> {
+    +consulterDossiers(): void
+    +televerserRapports(): void
+    +validerExamens(): void
+    +accederTableauMedical(): void
+}
+
+class Secretaire <<utilisateur>> {
+    +enregistrerPatients(): void
+    +planifierRendezVous(): void
+    +saisirInformations(): void
+    +gererAccueil(): void
+}
+
+class Comptable <<utilisateur>> {
+    +creerFactures(): void
+    +enregistrerPaiements(): void
+    +genererPDF(): void
+    +suivreCreances(): void
+    +consulterStatistiquesFinancieres(): void
+}
+
+' Autres Classes
+class Patient <<patient>> {
+    +id: int
+    +prenom: string
+    +nom: string
+    +numeroTelephone: string
+    +email: string
+    +adresse: string
+    +dateNaissance: date
+    +sexe: char
+    +dateCreation: datetime
+    +dateMiseAJour: datetime
+    --
+    +nomComplet(): string
+}
+
+class ExamType <<examen>> {
+    +id: int
+    +nom: string
+    +description: text
+    +prix: decimal
+    +dureeMinutes: int
+    +estActif: boolean
+    +dateCreation: datetime
+    +dateMiseAJour: datetime
+    --
+    +versChaine(): string
+}
+
+class Invoice <<facture>> {
+    +id: int
+    +numeroFacture: string
+    +dateFacture: date
+    +dateEcheance: date
+    +statut: char
+    +sousTotal: decimal
+    +tauxTaxe: decimal
+    +montantTaxe: decimal
+    +montantTotal: decimal
+    +notes: text
+    +dateCreation: datetime
+    +dateMiseAJour: datetime
+    --
+    +sauvegarder(): void
+    +creerAccesPatient(): PatientAccess
+    +obtenirInfosClesAcces(): object
+    +versChaine(): string
+}
+
+class InvoiceItem <<facture>> {
+    +id: int
+    +quantite: int
+    +prixUnitaire: decimal
+    +prixTotal: decimal
+    --
+    +sauvegarder(): void
+    +versChaine(): string
+}
+
+class Payment <<paiement>> {
+    +id: int
+    +montant: decimal
+    +datePaiement: datetime
+    +modePaiement: char
+    +statut: char
+    +numeroReference: string
+    +idTransaction: string
+    +numeroRecu: string
+    +numeroTelephone: string
+    +referenceOperateur: string
+    +notes: text
+    +dateCreation: datetime
+    +dateMiseAJour: datetime
+    --
+    +montantRestant(): decimal
+    +estPaiementPartiel(): boolean
+    +genererNumeroRecu(): string
+    +mettreAJourStatutFacture(): void
+    +versChaine(): string
+}
+
+class PatientAccess <<acces>> {
+    +id: int
+    +cleAcces: string
+    +motDePasse: string
+    +estActif: boolean
+    +nombreAcces: int
+    +dernierAcces: datetime
+    +dateCreation: datetime
+    +envoyeParSMS: boolean
+    +envoyeParEmail: boolean
+    --
+    +genererCleAcces(): string
+    +genererMotDePasse(): string
+    +estValide(): boolean
+    +enregistrerAcces(): void
+    +versChaine(): string
+}
+
+class PatientReport <<rapport>> {
+    +id: int
+    +fichierRapport: file
+    +dateCreation: datetime
+    +dateExpiration: datetime
+    +estActif: boolean
+    +nombreTelechargements: int
+    --
+    +estExpire(): boolean
+    +estAccessible(): boolean
+    +nomPatient(): string
+    +cleAcces(): string
+    +validerEtActiver(): void
+    +incrementerNombreTelechargements(): void
+    +versChaine(): string
+}
+
+' Héritage des utilisateurs
+Utilisateur <|-- SuperUtilisateur
+Utilisateur <|-- Administrateur
+Utilisateur <|-- Docteur
+Utilisateur <|-- Secretaire
+Utilisateur <|-- Comptable
+
+' Relations Patient
+Patient ||--|| PatientAccess : "a un accès unique"
+Patient ||--o{ Invoice : "a des factures"
+Secretaire ||--o{ Patient : "enregistre"
+Administrateur ||--o{ Patient : "gère"
+Docteur ||--o{ Patient : "consulte"
+
+' Relations ExamType
+Administrateur ||--o{ ExamType : "gère catalogue"
+ExamType ||--o{ InvoiceItem : "utilisé dans"
+
+' Relations Invoice
+Invoice ||--o{ InvoiceItem : "contient"
+Comptable ||--o{ Invoice : "crée et gère"
+Administrateur ||--o{ Invoice : "supervise"
+Invoice ||--|| PatientAccess : "génère accès automatique"
+
+' Relations Payment
+Invoice ||--o{ Payment : "reçoit paiements"
+Comptable ||--o{ Payment : "enregistre"
+Payment }|--|| Invoice : "met à jour statut"
+
+' Relations PatientAccess
+Utilisateur ||--o{ PatientAccess : "créé par"
+PatientAccess ||--o{ PatientReport : "donne accès aux rapports"
+
+' Relations PatientReport
+Docteur ||--o{ PatientReport : "téléverse"
+Patient ||--o{ PatientReport : "télécharge via accès"
+
+' Relations spécialisées par rôle
+SuperUtilisateur ||--o{ Utilisateur : "gère tous les utilisateurs"
+Administrateur ||--o{ ExamType : "configure examens"
+Docteur ||--o{ Invoice : "peut consulter pour diagnostic"
+Secretaire ||--o{ Invoice : "peut consulter pour info"
+Comptable ||--o{ PatientAccess : "génère via facturation"
+
+@enduml

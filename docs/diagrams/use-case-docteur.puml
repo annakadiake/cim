@@ -1,0 +1,76 @@
+@startuml Cas d'Utilisation - Docteur
+
+!theme plain
+skinparam backgroundColor white
+skinparam actorBackgroundColor #lightpink
+skinparam actorBorderColor #ad1457
+skinparam usecaseBackgroundColor #f5f5f5
+skinparam usecaseBorderColor #424242
+
+title Diagramme de Cas d'Utilisation - Docteur
+
+' Acteur
+actor "Docteur" as Doctor #lightpink
+
+' Système
+rectangle "Système Radio-Fact" {
+
+    ' Consultation Médicale
+    package "Consultation Médicale" #aliceblue {
+        usecase "Consulter dossier patient" as UC3
+        usecase "Consulter historique examens" as UC60
+        usecase "Analyser résultats antérieurs" as UC61
+    }
+
+    ' Rapports Médicaux
+    package "Rapports Médicaux" #lightcyan {
+        usecase "Téléverser compte rendu" as UC21
+        usecase "Valider rapport médical" as UC22
+        usecase "Consulter rapports patient" as UC23
+        usecase "Modifier rapport médical" as UC62
+        usecase "Archiver rapport" as UC63
+    }
+
+    ' Diagnostic
+    package "Diagnostic" #lavender {
+        usecase "Établir diagnostic" as UC64
+        usecase "Recommander traitement" as UC65
+        usecase "Prescrire examens complémentaires" as UC66
+    }
+
+    ' Statistiques Médicales
+    package "Statistiques Médicales" #lightsteelblue {
+        usecase "Consulter statistiques patients" as UC31
+        usecase "Analyser tendances pathologies" as UC67
+        usecase "Générer rapport médical global" as UC68
+    }
+}
+
+' Relations Docteur
+Doctor --> UC3 : consulte
+Doctor --> UC60 : consulte
+Doctor --> UC61 : analyse
+Doctor --> UC21 : téléverse
+Doctor --> UC22 : valide
+Doctor --> UC23 : consulte
+Doctor --> UC62 : modifie
+Doctor --> UC63 : archive
+Doctor --> UC64 : établit
+Doctor --> UC65 : recommande
+Doctor --> UC66 : prescrit
+Doctor --> UC31 : consulte
+Doctor --> UC67 : analyse
+Doctor --> UC68 : génère
+
+' Relations d'extension
+UC21 ..> UC64 : <<extend>>
+UC22 ..> UC65 : <<extend>>
+
+' Relations entre cas d'utilisation
+UC64 --> UC3 : utilise
+UC64 --> UC61 : utilise
+UC21 --> UC64 : suit
+UC66 --> UC3 : met à jour
+UC67 --> UC31 : utilise
+
+@enduml
