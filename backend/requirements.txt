@@ -31,6 +31,9 @@ opencv-python==4.10.0.84
 scipy==1.13.1
 matplotlib==3.8.4
 
+# Production Server
+gunicorn==22.0.0
+
 # Utilities
 charset-normalizer==3.4.2
 python-decouple==3.8
