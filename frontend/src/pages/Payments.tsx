@@ -7,7 +7,6 @@ import {
   Trash2, 
   Download,
   DollarSign,
-  Receipt,
   Phone,
   Building2
 } from 'lucide-react';
@@ -35,7 +34,7 @@ export const Payments: React.FC = () => {
   const canCreate = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'secretary' || user?.role === 'accountant';
   const canEdit = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant';
   const canDelete = user?.role === 'superuser' || user?.role === 'admin';
-  const canDownload = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
+  const canDownloadPDF = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
 
   const [formData, setFormData] = useState({
     invoice: '',
@@ -174,23 +173,6 @@ export const Payments: React.FC = () => {
     }
   };
 
-  const handleDownloadReceipt = async (payment: Payment) => {
-    try {
-      const response = await api.downloadReceiptPDF(payment.id);
-      
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `recu_${payment.receipt_number || payment.id}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      setError('Erreur lors du téléchargement du reçu');
-    }
-  };
 
   const resetForm = () => {
     setFormData({
@@ -222,7 +204,7 @@ export const Payments: React.FC = () => {
       case 'credit_card':
         return <CreditCard className="w-4 h-4" />;
       default:
-        return <Receipt className="w-4 h-4" />;
+        return <CreditCard className="w-4 h-4" />;
     }
   };
 
@@ -281,7 +263,7 @@ export const Payments: React.FC = () => {
           <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-[#3F4A1F]/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-gradient-to-br from-[#3F4A1F] to-[#3F4A1F]/80 rounded-xl flex items-center justify-center shadow-lg">
-                <Receipt className="h-6 w-6 text-white" />
+                <DollarSign className="h-6 w-6 text-white" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-neutral-600">Nombre de Paiements</p>
@@ -441,9 +423,6 @@ export const Payments: React.FC = () => {
                     <div className="md:col-span-1">
                       <div className="text-xs font-semibold text-[#3F4A1F] mb-1">RÉFÉRENCE</div>
                       <div className="text-sm text-neutral-800">
-                        {payment.receipt_number && (
-                          <div className="font-medium">Reçu: {payment.receipt_number}</div>
-                        )}
                         {payment.reference_number && (
                           <div className="text-xs text-neutral-600">
                             Réf: {payment.reference_number}
@@ -455,11 +434,25 @@ export const Payments: React.FC = () => {
 
                   {/* Actions */}
                   <div className="flex items-center space-x-2 ml-4">
-                    {canDownload && payment.status === 'completed' && payment.receipt_number && (
+                    {canDownloadPDF && payment.status === 'completed' && (
                       <button
-                        onClick={() => handleDownloadReceipt(payment)}
+                        onClick={async () => {
+                          try {
+                            const blob = await api.downloadInvoicePDF(payment.invoice);
+                            const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `facture_${payment.invoice}.pdf`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                          } catch (err) {
+                            setError('Erreur lors du téléchargement de la facture');
+                          }
+                        }}
                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-all duration-300 hover:scale-110"
-                        title="Télécharger le reçu"
+                        title="Télécharger la facture PDF"
                       >
                         <Download className="w-5 h-5" />
                       </button>

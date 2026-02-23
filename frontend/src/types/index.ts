@@ -113,7 +113,6 @@ export interface Payment {
   status_display?: string;
   reference_number?: string;
   transaction_id?: string;
-  receipt_number?: string;
   phone_number?: string;
   operator_reference?: string;
   notes?: string;

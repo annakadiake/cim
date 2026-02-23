@@ -206,13 +206,6 @@ class ApiClient {
     return response.data;
   }
 
-  async downloadReceiptPDF(id: number): Promise<Blob> {
-    const response = await this.client.get(`/payments/${id}/receipt/`, {
-      responseType: 'blob'
-    });
-    return response.data;
-  }
-
   // Types d'examens
   async getExamTypes(params?: Record<string, any>): Promise<PaginatedResponse<ExamType>> {
     const response = await this.client.get<PaginatedResponse<ExamType>>('/exams/', { params });

@@ -50,7 +50,7 @@ class AdminReportViewSet(viewsets.ModelViewSet):
         print(f"DEBUG: Fichiers reçus: {request.FILES}")
         
         # Vérifier que l'utilisateur a les bonnes permissions
-        if not request.user.role in ['admin', 'doctor', 'secretary']:
+        if not request.user.role in ['superuser', 'admin', 'doctor', 'secretary']:
             return Response(
                 {"detail": "Vous n'avez pas la permission d'ajouter un rapport"},
                 status=status.HTTP_403_FORBIDDEN

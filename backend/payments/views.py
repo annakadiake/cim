@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from django.http import HttpResponse
 from .models import Payment
 from .serializers import PaymentSerializer, PaymentSummarySerializer
-from .utils import generate_payment_receipt_pdf
 from core.pagination import StandardResultsSetPagination
 from core.filters import PaymentFilter
 
@@ -20,7 +19,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = PaymentFilter
-    search_fields = ['reference_number', 'transaction_id', 'receipt_number', 'invoice__invoice_number', 'invoice__patient__first_name', 'invoice__patient__last_name']
+    search_fields = ['reference_number', 'transaction_id', 'invoice__invoice_number', 'invoice__patient__first_name', 'invoice__patient__last_name']
     ordering_fields = ['payment_date', 'amount', 'created_at']
     ordering = ['-payment_date']
     
@@ -77,28 +76,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
         
         serializer = PaymentSummarySerializer(summary_data)
         return Response(serializer.data)
-    
-    @action(detail=True, methods=['get'])
-    def receipt(self, request, pk=None):
-        """Génère et télécharge le reçu de paiement en PDF"""
-        payment = self.get_object()
-        
-        if payment.status != 'completed':
-            return Response(
-                {'error': 'Le reçu ne peut être généré que pour les paiements complétés'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        try:
-            pdf_content = generate_payment_receipt_pdf(payment)
-            response = HttpResponse(pdf_content, content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="recu_{payment.receipt_number}.pdf"'
-            return response
-        except Exception as e:
-            return Response(
-                {'error': f'Erreur lors de la génération du PDF: {str(e)}'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
     
     @action(detail=False, methods=['get'])
     def by_invoice(self, request):

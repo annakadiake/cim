@@ -36,8 +36,14 @@ class BaseDashboardView(APIView):
 
 class AdminDashboardView(BaseDashboardView):
     def get(self, request):
+        from payments.models import Payment
+        from exams.models import ExamType
+        
         # Statistiques pour l'administrateur
         stats = self.get_user_stats(request.user)
+        today = stats['today']
+        start_of_month = stats['start_of_month']
+        start_of_week = stats['start_of_week']
         
         # Nombre total d'utilisateurs par rôle
         users_by_role = User.objects.values('role').annotate(count=Count('id'))
@@ -47,15 +53,87 @@ class AdminDashboardView(BaseDashboardView):
             'id', 'username', 'email', 'role', 'date_joined'
         )
         
+        # Derniers patients
+        recent_patients = Patient.objects.order_by('-created_at')[:5].values(
+            'id', 'first_name', 'last_name', 'phone_number', 'created_at'
+        )
+        
+        # Dernières factures
+        recent_invoices = Invoice.objects.select_related('patient').order_by('-created_at')[:5]
+        
+        # Derniers paiements
+        recent_payments = Payment.objects.select_related(
+            'invoice', 'invoice__patient'
+        ).order_by('-payment_date')[:5]
+        
+        # Revenus
+        total_revenue = Invoice.objects.filter(status='paid').aggregate(
+            total=Sum('total_amount')
+        )['total'] or 0
+        
+        monthly_revenue = Invoice.objects.filter(
+            status='paid', created_at__date__gte=start_of_month
+        ).aggregate(total=Sum('total_amount'))['total'] or 0
+        
+        weekly_revenue = Invoice.objects.filter(
+            status='paid', created_at__date__gte=start_of_week
+        ).aggregate(total=Sum('total_amount'))['total'] or 0
+        
+        # Paiements totaux
+        total_payments_amount = Payment.objects.filter(
+            status='completed'
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        
+        monthly_payments = Payment.objects.filter(
+            status='completed', payment_date__date__gte=start_of_month
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        
+        # Factures par statut
+        invoices_status = {
+            'draft': Invoice.objects.filter(status='draft').count(),
+            'sent': Invoice.objects.filter(status='sent').count(),
+            'partially_paid': Invoice.objects.filter(status='partially_paid').count(),
+            'paid': Invoice.objects.filter(status='paid').count(),
+            'cancelled': Invoice.objects.filter(status='cancelled').count(),
+        }
+        
+        # Patients ce mois
+        patients_this_month = Patient.objects.filter(
+            created_at__date__gte=start_of_month
+        ).count()
+        
         stats.update({
             'total_users': User.objects.count(),
             'users_by_role': {item['role']: item['count'] for item in users_by_role},
             'recent_users': list(recent_users),
             'total_patients': Patient.objects.count(),
+            'patients_this_month': patients_this_month,
             'total_invoices': Invoice.objects.count(),
-            'total_revenue': Invoice.objects.aggregate(
-                total=Sum('total_amount') or 0
-            )['total'],
+            'total_exams': ExamType.objects.filter(is_active=True).count(),
+            'total_reports': PatientReport.objects.count(),
+            'total_revenue': total_revenue,
+            'monthly_revenue': monthly_revenue,
+            'weekly_revenue': weekly_revenue,
+            'total_payments': Payment.objects.filter(status='completed').count(),
+            'total_payments_amount': total_payments_amount,
+            'monthly_payments': monthly_payments,
+            'invoices_status': invoices_status,
+            'recent_patients': list(recent_patients),
+            'recent_invoices': [{
+                'id': inv.id,
+                'invoice_number': inv.invoice_number,
+                'patient_name': inv.patient.full_name,
+                'total_amount': float(inv.total_amount),
+                'status': inv.status,
+                'created_at': inv.created_at,
+            } for inv in recent_invoices],
+            'recent_payments': [{
+                'id': p.id,
+                'patient_name': p.invoice.patient.full_name,
+                'amount': float(p.amount),
+                'payment_method': p.get_payment_method_display(),
+                'payment_date': p.payment_date,
+            } for p in recent_payments],
         })
         
         return Response(stats)
