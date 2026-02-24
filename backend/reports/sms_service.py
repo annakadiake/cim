@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class OrangeSMSService:
     """Service pour envoyer des SMS via l'API Orange Sénégal"""
     
-    TOKEN_URL = 'https://api.orange.com/oauth/v1/token'
+    TOKEN_URL = 'https://api.orange.com/oauth/v3/token'
     SMS_URL = 'https://api.orange.com/smsmessaging/v1/outbound/tel:+221{sender}/requests'
     
     def __init__(self):
@@ -110,7 +110,6 @@ class OrangeSMSService:
             "outboundSMSMessageRequest": {
                 "address": f"tel:{formatted_phone}",
                 "senderAddress": f"tel:+221{sender}",
-                "senderName": self.sender_name,
                 "outboundSMSTextMessage": {
                     "message": message
                 }
