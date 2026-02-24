@@ -112,6 +112,18 @@ class AdminReportViewSet(viewsets.ModelViewSet):
         # Mettre à jour les métadonnées si nécessaire
         report.is_active = True
         report.save()
+        
+        # Envoyer un SMS de notification au patient
+        try:
+            from .sms_service import sms_service
+            success, detail = sms_service.send_report_notification(report)
+            if success:
+                print(f"SMS envoyé au patient {report.patient_name}")
+            else:
+                print(f"SMS non envoyé: {detail}")
+        except Exception as e:
+            # Ne pas bloquer la création du rapport si le SMS échoue
+            print(f"Erreur envoi SMS: {e}")
     
     def get_queryset(self):
         """

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, FileText, Shield, DollarSign, Stethoscope, CreditCard, TrendingUp, ClipboardList, ArrowRight } from 'lucide-react';
+import { Users, FileText, Shield, DollarSign, Stethoscope, CreditCard, ClipboardList, ArrowRight } from 'lucide-react';
 import { api } from '@/lib/api';
 
 export const AdminDashboard: React.FC = () => {
@@ -56,8 +56,6 @@ export const AdminDashboard: React.FC = () => {
     total_users: stats.total_users || 0,
     users_by_role: stats.users_by_role || {},
     total_revenue: stats.total_revenue || 0,
-    monthly_revenue: stats.monthly_revenue || 0,
-    weekly_revenue: stats.weekly_revenue || 0,
     total_payments: stats.total_payments || 0,
     total_payments_amount: stats.total_payments_amount || 0,
     monthly_payments: stats.monthly_payments || 0,
@@ -204,7 +202,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Revenus */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl p-5 text-white shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm text-white/80">Revenu Total</p>
@@ -212,15 +210,6 @@ export const AdminDashboard: React.FC = () => {
           </div>
           <p className="text-2xl font-bold">{formatMoney(s.total_revenue)}</p>
           <p className="text-xs text-white/60 mt-1">Toutes factures payées</p>
-        </div>
-
-        <div className="bg-white rounded-xl p-5 shadow-md border border-[#636B2F]/10">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-neutral-500">Revenu Mensuel</p>
-            <TrendingUp className="w-5 h-5 text-[#636B2F]" />
-          </div>
-          <p className="text-2xl font-bold text-neutral-800">{formatMoney(s.monthly_revenue)}</p>
-          <p className="text-xs text-neutral-400 mt-1">Ce mois-ci</p>
         </div>
 
         <div className="bg-white rounded-xl p-5 shadow-md border border-[#636B2F]/10">

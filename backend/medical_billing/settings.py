@@ -116,6 +116,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Patient Portal Configuration
 PATIENT_PORTAL_URL = config('PATIENT_PORTAL_URL', default='http://localhost:5173/patient')
 
+# Orange SMS API Configuration (Sénégal)
+# Créer un compte sur https://developer.orange.com
+# Souscrire à l'API "SMS Senegal" et récupérer les credentials
+ORANGE_SMS_ENABLED = config('ORANGE_SMS_ENABLED', default=False, cast=bool)
+ORANGE_SMS_CLIENT_ID = config('ORANGE_SMS_CLIENT_ID', default='')
+ORANGE_SMS_CLIENT_SECRET = config('ORANGE_SMS_CLIENT_SECRET', default='')
+ORANGE_SMS_SENDER_NUMBER = config('ORANGE_SMS_SENDER_NUMBER', default='')
+ORANGE_SMS_SENDER_NAME = config('ORANGE_SMS_SENDER_NAME', default='CIMEF')
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
