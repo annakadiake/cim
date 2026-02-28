@@ -187,7 +187,7 @@ const PatientReports: React.FC = () => {
     }
   };
 
-  const handleToggleActive = async (reportId: number) => {
+  const _handleToggleActive = async (reportId: number) => {
     try {
       await api.togglePatientReportActive(reportId);
       fetchReports();
