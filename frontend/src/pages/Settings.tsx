@@ -51,10 +51,13 @@ const Settings: React.FC = () => {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
+  const loadSettings = () => {
     try {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const saved = localStorage.getItem('cimef_settings');
+      if (saved) {
+        setSettings(prev => ({ ...prev, ...JSON.parse(saved) }));
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des paramètres:', error);
     } finally {
@@ -62,10 +65,10 @@ const Settings: React.FC = () => {
     }
   };
 
-  const saveSettings = async () => {
+  const saveSettings = () => {
     try {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      localStorage.setItem('cimef_settings', JSON.stringify(settings));
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
