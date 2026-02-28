@@ -16,9 +16,13 @@ import orangeMoneyLogo from '@/assets/images/OrangeMoney.png';
 import { Payment, Invoice, PaymentSummary } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 export const Payments: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -164,14 +168,21 @@ export const Payments: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce paiement ?')) {
-      try {
-        await api.deletePayment(id);
-        fetchPayments();
-        fetchSummary();
-      } catch (err) {
-        setError('Erreur lors de la suppression');
-      }
+    const ok = await confirm({
+      title: 'Supprimer le paiement',
+      message: 'Êtes-vous sûr de vouloir supprimer ce paiement ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
+
+    try {
+      await api.deletePayment(id);
+      fetchPayments();
+      fetchSummary();
+      toast.success('Paiement supprimé avec succès');
+    } catch (err) {
+      toast.error('Erreur lors de la suppression du paiement');
     }
   };
 

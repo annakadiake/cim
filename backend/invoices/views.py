@@ -1,3 +1,4 @@
+from decimal import Decimal
 from rest_framework import viewsets, filters, status, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -100,16 +101,16 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             
             # Calculer et sauvegarder les totaux
             # TVA incluse dans le prix : le prix de l'examen EST le prix TTC
-            tax_rate = float(self.request.data.get('tax_rate', 18.00))  # 18% TVA par défaut
-            total_amount = subtotal  # subtotal ici = somme des prix TTC
-            ht = round(total_amount / (1 + tax_rate / 100))
+            tax_rate = Decimal(str(self.request.data.get('tax_rate', '18.00')))
+            total_amount = Decimal(str(subtotal))
+            ht = round(total_amount / (1 + tax_rate / Decimal('100')))
             tax_amount = total_amount - ht
             
             invoice.subtotal = ht
             invoice.tax_rate = tax_rate
             invoice.tax_amount = tax_amount
             invoice.total_amount = total_amount
-            invoice.save()
+            invoice.save(update_fields=['subtotal', 'tax_rate', 'tax_amount', 'total_amount', 'updated_at'])
                 
             # Générer ou récupérer les clés d'accès patient
             try:

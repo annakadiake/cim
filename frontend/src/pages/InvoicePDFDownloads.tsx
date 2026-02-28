@@ -3,7 +3,10 @@ import { Download, FileText, Search, Calendar, User, DollarSign, Filter, X } fro
 import { api } from '../lib/api';
 import { Invoice } from '../types';
 import { Card, CardContent } from '../components/ui/Card';
+import { useToast } from '@/components/ui/Toast';
+
 const InvoicePDFDownloads: React.FC = () => {
+  const toast = useToast();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState<number | null>(null);
@@ -52,7 +55,7 @@ const InvoicePDFDownloads: React.FC = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
-      alert('Erreur lors du téléchargement du PDF');
+      toast.error('Erreur lors du téléchargement du PDF');
     } finally {
       setDownloading(null);
     }

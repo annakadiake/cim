@@ -7,8 +7,10 @@ import { Badge } from '@/components/ui/Badge';
 import { api } from '@/lib/api';
 import { PatientReport, PatientLoginResponse } from '@/types';
 import { formatDate, formatDateTime, downloadBlob } from '@/lib/utils';
+import { useToast } from '@/components/ui/Toast';
 
 export const PatientDashboard: React.FC = () => {
+  const toast = useToast();
   const [patientData, setPatientData] = useState<PatientLoginResponse | null>(null);
   const [reports, setReports] = useState<PatientReport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export const PatientDashboard: React.FC = () => {
       downloadBlob(blob, filename);
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
-      alert('Erreur lors du téléchargement du fichier');
+      toast.error('Erreur lors du téléchargement du fichier');
     } finally {
       setDownloadingId(null);
     }

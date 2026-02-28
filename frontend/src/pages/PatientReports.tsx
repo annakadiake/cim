@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FileText, Download, Upload, Search, Filter, X, Trash2, Calendar } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../lib/api';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 interface PatientReport {
   id: number;
@@ -28,6 +30,8 @@ interface PatientAccess {
 
 const PatientReports: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   
   // Permissions
   const canUpload = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'doctor' || user?.role === 'secretary';
@@ -94,7 +98,7 @@ const PatientReports: React.FC = () => {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadForm.file || !uploadForm.patient_access_id) {
-      alert('Veuillez sélectionner un patient et un fichier');
+      toast.warning('Veuillez sélectionner un patient et un fichier');
       return;
     }
 
@@ -138,7 +142,7 @@ const PatientReports: React.FC = () => {
         await fetchReports();
         
         // Afficher un message de succès
-        alert('Compte rendu uploadé avec succès');
+        toast.success('Compte rendu uploadé avec succès');
       } catch (uploadError: any) {
         console.error('DEBUG: Erreur lors de l\'appel API:', uploadError);
         console.error('Détails de l\'erreur:', uploadError.response?.data);
@@ -173,11 +177,11 @@ const PatientReports: React.FC = () => {
           errorMessage = `Erreur de configuration de la requête: ${uploadError.message}`;
         }
         
-        alert(`Erreur lors de l'upload: ${errorMessage}`);
+        toast.error(`Erreur lors de l'upload: ${errorMessage}`);
       }
     } catch (error: any) {
       console.error('Erreur inattendue:', error);
-      alert(`Une erreur inattendue s'est produite: ${error.message}`);
+      toast.error(`Erreur inattendue: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -193,13 +197,21 @@ const PatientReports: React.FC = () => {
   };
 
   const handleDelete = async (reportId: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce compte rendu ?')) {
-      try {
-        await api.deletePatientReport(reportId);
-        fetchReports();
-      } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-      }
+    const ok = await confirm({
+      title: 'Supprimer le compte rendu',
+      message: 'Êtes-vous sûr de vouloir supprimer ce compte rendu ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
+
+    try {
+      await api.deletePatientReport(reportId);
+      fetchReports();
+      toast.success('Compte rendu supprimé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast.error('Erreur lors de la suppression du compte rendu');
     }
   };
 

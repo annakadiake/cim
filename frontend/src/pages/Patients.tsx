@@ -17,6 +17,8 @@ import { api } from '@/lib/api';
 import { Patient } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 // Données de patients initiaux pour les tests
 const initialPatients: Patient[] = [
@@ -89,6 +91,8 @@ const initialPatients: Patient[] = [
 
 export const Patients: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -159,13 +163,21 @@ export const Patients: React.FC = () => {
   };
 
   const handleDeletePatient = async (id: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce patient ?')) {
-      try {
-        await api.deletePatient(id);
-        fetchPatients();
-      } catch (error) {
-        console.error('Erreur lors de la suppression du patient:', error);
-      }
+    const ok = await confirm({
+      title: 'Supprimer le patient',
+      message: 'Êtes-vous sûr de vouloir supprimer ce patient ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
+
+    try {
+      await api.deletePatient(id);
+      fetchPatients();
+      toast.success('Patient supprimé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la suppression du patient:', error);
+      toast.error('Erreur lors de la suppression du patient');
     }
   };
 

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from patients.models import Patient, PatientAccess
@@ -67,11 +68,16 @@ class Invoice(models.Model):
             else:
                 self.invoice_number = "FAC-000001"
         
-        # Calculate total, then extract tax (TVA incluse dans le prix)
-        # Le prix de l'examen EST le prix TTC
-        self.total_amount = sum(item.total_price for item in self.items.all()) if self.pk else 0
-        self.subtotal = round(self.total_amount / (1 + self.tax_rate / 100))
-        self.tax_amount = self.total_amount - self.subtotal
+        # Recalculer les totaux seulement si update_fields n'est pas spécifié
+        # (évite d'écraser les valeurs calculées manuellement dans perform_create)
+        update_fields = kwargs.get('update_fields')
+        if update_fields is None and self.pk:
+            # Calculate total, then extract tax (TVA incluse dans le prix)
+            # Le prix de l'examen EST le prix TTC
+            self.total_amount = sum(item.total_price for item in self.items.all())
+            if self.total_amount > 0:
+                self.subtotal = round(self.total_amount / (1 + self.tax_rate / Decimal('100')))
+                self.tax_amount = self.total_amount - self.subtotal
         
         super().save(*args, **kwargs)
         
@@ -144,7 +150,7 @@ class InvoiceItem(models.Model):
             try:
                 invoice = self.invoice
                 invoice.total_amount = sum(item.total_price for item in invoice.items.all())
-                invoice.subtotal = round(invoice.total_amount / (1 + invoice.tax_rate / 100))
+                invoice.subtotal = round(invoice.total_amount / (1 + invoice.tax_rate / Decimal('100')))
                 invoice.tax_amount = invoice.total_amount - invoice.subtotal
                 invoice.save(update_fields=['total_amount', 'subtotal', 'tax_amount', 'updated_at'])
             except Exception as e:

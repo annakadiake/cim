@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/components/ui/Toast';
+import { ConfirmProvider } from '@/components/ui/ConfirmDialog';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { LoginForm } from './components/auth/LoginForm';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -16,6 +18,8 @@ import Settings from './pages/Settings';
 
 function App() {
   return (
+    <ToastProvider>
+    <ConfirmProvider>
     <AuthProvider>
       <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
         <Routes>
@@ -99,6 +103,8 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </ConfirmProvider>
+    </ToastProvider>
   );
 }
 

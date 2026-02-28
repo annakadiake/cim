@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, UserPlus, Edit, Trash2, Eye, EyeOff, Filter, X, Users as UsersIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 interface User {
   id: number;
@@ -18,6 +20,8 @@ interface User {
 
 const Users: React.FC = () => {
   const { user: currentUser } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -97,13 +101,21 @@ const Users: React.FC = () => {
   };
 
   const handleDelete = async (userId: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-      try {
-        await api.deleteUser(userId);
-        fetchUsers();
-      } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-      }
+    const ok = await confirm({
+      title: 'Supprimer l\'utilisateur',
+      message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
+
+    try {
+      await api.deleteUser(userId);
+      fetchUsers();
+      toast.success('Utilisateur supprimé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast.error('Erreur lors de la suppression de l\'utilisateur');
     }
   };
 

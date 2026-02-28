@@ -4,9 +4,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { ExamType } from '../types';
 import { api } from '../lib/api';
 import { Card, CardContent } from '../components/ui/Card';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 const Exams: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,16 +63,21 @@ const Exams: React.FC = () => {
   };
 
   const handleDeleteExam = async (id: number) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet examen ?')) {
-      return;
-    }
+    const ok = await confirm({
+      title: 'Supprimer l\'examen',
+      message: 'Êtes-vous sûr de vouloir supprimer cet examen ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
 
     try {
       await api.deleteExamType(id);
       fetchExamTypes();
+      toast.success('Examen supprimé avec succès');
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
-      alert('Erreur lors de la suppression de l\'examen');
+      toast.error('Erreur lors de la suppression de l\'examen');
     }
   };
 
@@ -83,7 +92,7 @@ const Exams: React.FC = () => {
       fetchExamTypes();
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
-      alert('Erreur lors de la sauvegarde de l\'examen');
+      toast.error('Erreur lors de la sauvegarde de l\'examen');
     }
   };
 

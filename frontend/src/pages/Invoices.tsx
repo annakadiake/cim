@@ -4,9 +4,13 @@ import { Invoice, Patient, ExamType, InvoiceItem } from '@/types';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 
 const Invoices: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
@@ -78,22 +82,27 @@ const Invoices: React.FC = () => {
   };
 
   const handleDeleteInvoice = async (id: number) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
-      return;
-    }
+    const ok = await confirm({
+      title: 'Supprimer la facture',
+      message: 'Êtes-vous sûr de vouloir supprimer cette facture ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      variant: 'danger',
+    });
+    if (!ok) return;
 
     try {
       await api.deleteInvoice(id);
       fetchInvoices();
+      toast.success('Facture supprimée avec succès');
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
-      alert('Erreur lors de la suppression de la facture');
+      toast.error('Erreur lors de la suppression de la facture');
     }
   };
 
   const handleDownloadPDF = async (invoice: Invoice) => {
     if (invoice.status !== 'paid') {
-      alert(`Impossible de télécharger la facture #${invoice.id}.\nLe téléchargement PDF n'est disponible que pour les factures avec le statut "Payée".`);
+      toast.warning('Le téléchargement PDF n\'est disponible que pour les factures payées.');
       return;
     }
 
@@ -110,7 +119,7 @@ const Invoices: React.FC = () => {
       document.body.removeChild(a);
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
-      alert('Erreur lors du téléchargement du PDF');
+      toast.error('Erreur lors du téléchargement du PDF');
     }
   };
 
@@ -126,7 +135,7 @@ const Invoices: React.FC = () => {
     } catch (error: any) {
       console.error('Erreur lors de la sauvegarde:', error);
       console.error('Détails de l\'erreur:', error.response?.data);
-      alert(`Erreur lors de la sauvegarde de la facture: ${error.response?.data?.detail || error.message}`);
+      toast.error(`Erreur lors de la sauvegarde: ${error.response?.data?.detail || error.message}`);
     }
   };
 
