@@ -59,7 +59,7 @@ const Users: React.FC = () => {
       setLoading(true);
       const data = await api.getUsers();
       const allUsers = Array.isArray(data) ? data : data.results || [];
-      setUsers(allUsers.filter((u: User) => u.role !== 'superuser'));
+      setUsers(allUsers);
     } catch (error) {
       console.error('Erreur lors du chargement des utilisateurs:', error);
       setUsers([]);
@@ -163,8 +163,8 @@ const Users: React.FC = () => {
   };
 
   const filteredUsers = users.filter(user => {
-    // Cacher les superutilisateurs de la liste
-    if (user.role === 'superuser') {
+    // Cacher les superutilisateurs pour les admins (le superuser se voit lui-même via le backend)
+    if (user.role === 'superuser' && currentUser?.role !== 'superuser') {
       return false;
     }
     
@@ -342,7 +342,7 @@ const Users: React.FC = () => {
                       >
                         <Edit className="h-4 w-4" />
                       </button>
-                      {user.id !== currentUser?.id && (
+                      {user.id !== currentUser?.id && user.role !== 'superuser' && (
                         <button
                           onClick={() => handleDelete(user.id)}
                           className="text-red-600 hover:text-red-900 p-1"

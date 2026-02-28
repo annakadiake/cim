@@ -51,17 +51,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         self.check_admin_permission(request)
         target_user = self.get_object()
-        if target_user.role == 'superuser':
+        if target_user.role == 'superuser' and request.user.id != target_user.id:
             from rest_framework.exceptions import PermissionDenied
-            raise PermissionDenied("Le compte superutilisateur ne peut pas être modifié.")
+            raise PermissionDenied("Seul le superutilisateur peut modifier son propre compte.")
         return super().update(request, *args, **kwargs)
     
     def partial_update(self, request, *args, **kwargs):
         self.check_admin_permission(request)
         target_user = self.get_object()
-        if target_user.role == 'superuser':
+        if target_user.role == 'superuser' and request.user.id != target_user.id:
             from rest_framework.exceptions import PermissionDenied
-            raise PermissionDenied("Le compte superutilisateur ne peut pas être modifié.")
+            raise PermissionDenied("Seul le superutilisateur peut modifier son propre compte.")
         return super().partial_update(request, *args, **kwargs)
     
     def destroy(self, request, *args, **kwargs):
