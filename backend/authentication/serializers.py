@@ -7,6 +7,14 @@ User = get_user_model()
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
+        # Rendre le nom d'utilisateur insensible à la casse
+        username = attrs.get('username', '')
+        try:
+            user_obj = User.objects.get(username__iexact=username)
+            attrs['username'] = user_obj.username
+        except User.DoesNotExist:
+            pass
+        
         data = super().validate(attrs)
         
         # Vérifier que l'utilisateur est actif
