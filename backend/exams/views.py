@@ -9,6 +9,34 @@ from .serializers import ExamTypeSerializer
 from core.pagination import StandardResultsSetPagination
 from core.filters import ExamTypeFilter
 
+class IsExamPermission(BasePermission):
+    """
+    Permission personnalisée pour les examens selon les rôles.
+    """
+    def has_permission(self, request, view):
+        user = request.user
+        if not user.is_authenticated:
+            return False
+        
+        # Superusers et admins ont accès complet
+        if user.role in ['superuser', 'admin']:
+            return True
+        
+        # Les docteurs peuvent lire et créer
+        if user.role == 'doctor':
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+            
+        # Les secrétaires peuvent lire et créer
+        if user.role == 'secretary':
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+            
+        # Les comptables peuvent seulement lire
+        if user.role == 'accountant':
+            return request.method in ['GET', 'HEAD', 'OPTIONS']
+            
+        return False
+
+
 class ExamTypeViewSet(viewsets.ModelViewSet):
     queryset = ExamType.objects.all()
     serializer_class = ExamTypeSerializer
@@ -23,23 +51,9 @@ class ExamTypeViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Instantiates and returns the list of permissions that this view requires.
+        Permission basée sur les rôles pour les examens.
         """
-        user = self.request.user
-        
-        # Si l'utilisateur est un comptable ou secrétaire
-        if hasattr(user, 'role') and user.role in ['accountant', 'secretary']:
-            # Lecture seule pour les comptables et secrétaires
-            if self.action in ['list', 'retrieve', 'active_only', 'search_by_price_range']:
-                permission_classes = [IsAuthenticated]
-            else:
-                # Pour les autres actions, refuser par défaut
-                permission_classes = [IsAuthenticated]
-        else:
-            # Pour les autres rôles, utiliser les permissions Django standard
-            permission_classes = [IsAuthenticated, DjangoModelPermissions]
-            
-        return [permission() for permission in permission_classes]
+        return [IsAuthenticated(), IsExamPermission()]
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = ExamTypeFilter
