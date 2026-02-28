@@ -209,10 +209,11 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 # Trusted origins for CSRF and CORS
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://147.182.252.89']
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Frontend development server
     'http://127.0.0.1:5173',  # Frontend development server alternative
+    'http://147.182.252.89',  # Production server
 ]
 
 # Disable CSRF for API endpoints (using JWT instead)
@@ -266,6 +267,7 @@ CORS_ALLOW_HEADERS = [
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'http://147.182.252.89',
 ]
 
 # Session settings
