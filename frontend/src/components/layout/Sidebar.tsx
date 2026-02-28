@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Factures',
       href: '/invoices',
       icon: FileText,
-      permission: 'invoices_full',
+      permission: 'invoices',
     },
     {
       label: 'Paiements',
@@ -80,9 +80,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     },
   ];
 
+  const { user } = useAuth();
   const filteredNavItems = navItems.filter(item => 
     !item.permission || hasPermission(item.permission)
   );
+  const isAdmin = user?.role === 'superuser' || user?.role === 'admin';
 
   return (
     <>
@@ -152,18 +154,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           {/* Footer */}
           <div className="px-3 py-4 border-t border-neutral-200 space-y-2 bg-neutral-50/50">
-            <NavLink
-              to="/settings"
-              className={({ isActive }) => cn(
-                "group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out",
-                isActive 
-                  ? "bg-gradient-to-r from-neutral-600 to-neutral-700 text-white shadow-lg" 
-                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800"
-              )}
-            >
-              <Settings className="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform duration-300" />
-              <span className="flex-1">Paramètres</span>
-            </NavLink>
+            {isAdmin && (
+              <NavLink
+                to="/settings"
+                className={({ isActive }) => cn(
+                  "group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out",
+                  isActive 
+                    ? "bg-gradient-to-r from-neutral-600 to-neutral-700 text-white shadow-lg" 
+                    : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800"
+                )}
+              >
+                <Settings className="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform duration-300" />
+                <span className="flex-1">Paramètres</span>
+              </NavLink>
+            )}
             
             <button
               onClick={handleLogout}

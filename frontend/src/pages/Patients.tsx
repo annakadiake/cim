@@ -102,8 +102,8 @@ export const Patients: React.FC = () => {
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
 
   // Permissions par rôle
-  const canCreate = ['superuser', 'admin', 'secretary'].includes(user?.role || '');
-  const canEdit = ['superuser', 'admin', 'secretary'].includes(user?.role || '');
+  const canCreate = ['superuser', 'admin', 'secretary', 'doctor'].includes(user?.role || '');
+  const canEdit = ['superuser', 'admin', 'secretary', 'doctor'].includes(user?.role || '');
   const canDelete = ['superuser', 'admin', 'secretary'].includes(user?.role || '');
   const canViewAll = ['superuser', 'admin', 'doctor', 'secretary'].includes(user?.role || '');
 

@@ -77,11 +77,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return true;
     }
     
-    // Permissions par rôle
+    // Permissions par rôle (lecture = voir la page, create/delete = actions)
     const rolePermissions: Record<string, string[]> = {
-      doctor: ['patients', 'exams', 'reports'],
-      secretary: ['patients', 'appointments', 'invoices', 'exams', 'reports'],
-      accountant: ['invoices', 'invoices_full', 'payments'],
+      doctor: [
+        'patients', 'patients_create', 'patients_edit',
+        'exams', 'exams_create', 'exams_edit',
+        'reports', 'reports_create', 'reports_edit',
+        'invoices',
+      ],
+      secretary: [
+        'patients', 'patients_create', 'patients_edit', 'patients_delete',
+        'exams', 'exams_create', 'exams_edit',
+        'invoices', 'invoices_create', 'invoices_edit',
+        'payments', 'payments_create', 'payments_edit',
+        'reports', 'reports_create', 'reports_edit',
+      ],
+      accountant: [
+        'patients',
+        'invoices', 'invoices_full', 'invoices_create', 'invoices_edit', 'invoices_delete',
+        'payments', 'payments_create', 'payments_edit', 'payments_delete',
+      ],
     };
     
     const userPermissions = rolePermissions[user.role] || [];
