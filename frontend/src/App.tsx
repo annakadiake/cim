@@ -10,7 +10,6 @@ import { Patients } from './pages/Patients';
 import Exams from './pages/Exams';
 import Invoices from './pages/Invoices';
 import { Payments } from './pages/Payments';
-import InvoicePDFDownloads from './pages/InvoicePDFDownloads';
 import PatientReports from './pages/PatientReports';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
@@ -61,13 +60,6 @@ function App() {
             <Route path="payments" element={
               <ProtectedRoute permission="payments">
                 <Payments />
-              </ProtectedRoute>
-            } />
-            
-            {/* Téléchargement PDF Factures */}
-            <Route path="invoice-downloads" element={
-              <ProtectedRoute permission="invoices">
-                <InvoicePDFDownloads />
               </ProtectedRoute>
             } />
             

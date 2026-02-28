@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Receipt, Search, Plus, Edit2, Trash2, Download, Calendar, DollarSign, User } from 'lucide-react';
+import { Receipt, Search, Plus, Edit2, Trash2, Download, Calendar, User } from 'lucide-react';
 import { Invoice, Patient, ExamType, InvoiceItem } from '@/types';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
@@ -260,8 +260,9 @@ const Invoices: React.FC = () => {
                               <Calendar className="w-4 h-4 text-[#3F4A1F]" />
                               <span className="text-neutral-700">{formatDate(invoice.invoice_date)}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <DollarSign className="w-4 h-4 text-green-600" />
+                            <div className="flex flex-col items-end">
+                              <span className="text-xs text-neutral-500">Sous-total: {formatPrice(invoice.subtotal)}</span>
+                              <span className="text-xs text-neutral-500">TVA ({invoice.tax_rate}%): {formatPrice(invoice.tax_amount)}</span>
                               <span className="font-semibold text-neutral-800">{formatPrice(invoice.total_amount)}</span>
                             </div>
                           </div>
@@ -373,6 +374,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
     invoice_date: invoice?.invoice_date || new Date().toISOString().split('T')[0],
     due_date: invoice?.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     status: invoice?.status || 'sent',
+    tax_rate: invoice?.tax_rate || 18.00,
     notes: invoice?.notes || '',
   });
 
@@ -383,11 +385,17 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Calculer le total (sans taxes)
-    const total_amount = items.reduce((sum, item) => sum + (item.unit_price || 0) * (item.quantity || 1), 0);
+    // Calculer le sous-total et le total avec TVA
+    const subtotal = items.reduce((sum, item) => sum + (item.unit_price || 0) * (item.quantity || 1), 0);
+    const tax_rate = formData.tax_rate || 18.00;
+    const tax_amount = subtotal * (tax_rate / 100);
+    const total_amount = subtotal + tax_amount;
 
     onSubmit({
       ...formData,
+      tax_rate,
+      subtotal,
+      tax_amount,
       total_amount,
       items: items.map((item, index) => ({
         id: item.id || index,
@@ -575,13 +583,33 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
               </div>
             </div>
 
-            {/* Total de la facture */}
+            {/* TVA et Total de la facture */}
             <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 p-3 rounded-lg border border-[#636B2F]/30">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-bold text-neutral-800">Total:</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
-                  {new Intl.NumberFormat('fr-FR').format(total_amount)} FCFA
-                </span>
+              <div className="grid grid-cols-2 gap-4 mb-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+                    Taux de TVA (%)
+                  </label>
+                  <input
+                    type="number"
+                    name="tax_rate"
+                    value={formData.tax_rate || 18.00}
+                    onChange={handleChange}
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                  />
+                </div>
+                <div className="flex items-end justify-end">
+                  <div className="text-right">
+                    <div className="text-xs text-neutral-600">Sous-total: {new Intl.NumberFormat('fr-FR').format(total_amount)} FCFA</div>
+                    <div className="text-xs text-neutral-600">TVA ({formData.tax_rate || 18.00}%): {new Intl.NumberFormat('fr-FR').format(total_amount * ((formData.tax_rate || 18.00) / 100))} FCFA</div>
+                    <div className="text-sm font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
+                      Total: {new Intl.NumberFormat('fr-FR').format(total_amount * (1 + ((formData.tax_rate || 18.00) / 100)))} FCFA
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

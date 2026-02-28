@@ -99,8 +99,8 @@ class InvoiceViewSet(viewsets.ModelViewSet):
                         raise serializers.ValidationError(f"Erreur lors de la création de l'item: {str(e)}")
             
             # Calculer et sauvegarder les totaux
-            tax_rate = self.request.data.get('tax_rate', 0)
-            tax_amount = subtotal * (tax_rate / 100) if tax_rate > 0 else 0
+            tax_rate = float(self.request.data.get('tax_rate', 18.00))  # 18% TVA par défaut
+            tax_amount = subtotal * (tax_rate / 100)
             total_amount = subtotal + tax_amount
             
             invoice.subtotal = subtotal

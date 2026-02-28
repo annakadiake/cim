@@ -32,7 +32,7 @@ class Invoice(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='sent', verbose_name="Statut")
     
     subtotal = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Sous-total")
-    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Taux de taxe (%)")
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=18.00, verbose_name="Taux de taxe (%)")
     tax_amount = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Montant de taxe")
     total_amount = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Montant total")
     
@@ -67,8 +67,10 @@ class Invoice(models.Model):
             else:
                 self.invoice_number = "FAC-000001"
         
-        # Calculate total (no taxes)
-        self.total_amount = sum(item.total_price for item in self.items.all()) if self.pk else 0
+        # Calculate subtotal, tax and total
+        self.subtotal = sum(item.total_price for item in self.items.all()) if self.pk else 0
+        self.tax_amount = self.subtotal * (self.tax_rate / 100)
+        self.total_amount = self.subtotal + self.tax_amount
         
         super().save(*args, **kwargs)
         

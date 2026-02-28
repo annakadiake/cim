@@ -116,6 +116,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Patient Portal Configuration
 PATIENT_PORTAL_URL = config('PATIENT_PORTAL_URL', default='http://localhost:5173/patient')
 
+# Tax Configuration (TVA)
+DEFAULT_TAX_RATE = config('DEFAULT_TAX_RATE', default=18.00, cast=float)  # TVA 18% au Sénégal
+
 # Orange SMS API Configuration (Sénégal)
 # Créer un compte sur https://developer.orange.com
 # Souscrire à l'API "SMS Senegal" et récupérer les credentials

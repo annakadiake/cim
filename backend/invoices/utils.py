@@ -189,14 +189,17 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     
     # Totals
     totals_data = [
+        ['Sous-total:', f'{int(invoice.subtotal):,} FCFA'],
+        [f'TVA ({invoice.tax_rate}%):', f'{int(invoice.tax_amount):,} FCFA'],
         ['TOTAL:', f'{int(invoice.total_amount):,} FCFA']
     ]
     
     totals_table = Table(totals_data, colWidths=[12*cm, 6*cm])
     totals_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
+        ('FONTNAME', (0, 0), (-1, -2), 'Helvetica'),
         ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, -1), (-1, -1), 12),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor('#3F4A1F')),
         ('LINEABOVE', (0, -1), (-1, -1), 2, colors.HexColor('#3F4A1F')),
     ]))

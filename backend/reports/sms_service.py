@@ -22,12 +22,21 @@ class OrangeSMSService:
     TOKEN_URL = 'https://api.orange.com/oauth/v3/token'
     SMS_URL = 'https://api.orange.com/smsmessaging/v1/outbound/tel:+221{sender}/requests'
     
-    def __init__(self):
-        self.client_id = getattr(settings, 'ORANGE_SMS_CLIENT_ID', '')
-        self.client_secret = getattr(settings, 'ORANGE_SMS_CLIENT_SECRET', '')
-        self.sender_number = getattr(settings, 'ORANGE_SMS_SENDER_NUMBER', '')
-        self.sender_name = getattr(settings, 'ORANGE_SMS_SENDER_NAME', 'CIMEF')
-        self.enabled = getattr(settings, 'ORANGE_SMS_ENABLED', False)
+    @property
+    def client_id(self):
+        return getattr(settings, 'ORANGE_SMS_CLIENT_ID', '')
+    
+    @property
+    def client_secret(self):
+        return getattr(settings, 'ORANGE_SMS_CLIENT_SECRET', '')
+    
+    @property
+    def sender_number(self):
+        return getattr(settings, 'ORANGE_SMS_SENDER_NUMBER', '')
+    
+    @property
+    def enabled(self):
+        return getattr(settings, 'ORANGE_SMS_ENABLED', False)
     
     def get_access_token(self):
         """Obtenir un token OAuth2 depuis l'API Orange"""
@@ -45,6 +54,7 @@ class OrangeSMSService:
             return response.json().get('access_token')
         except requests.RequestException as e:
             logger.error(f"Erreur lors de l'obtention du token Orange SMS: {e}")
+            print(f"[SMS] Erreur token: {e}")
             return None
     
     def _get_basic_auth(self):
@@ -87,8 +97,9 @@ class OrangeSMSService:
         Returns:
             (success: bool, detail: str)
         """
+        print(f"[SMS] send_sms appelé - enabled={self.enabled}, phone={phone_number}")
         if not self.enabled:
-            logger.info(f"SMS désactivé. Message pour {phone_number}: {message}")
+            print(f"[SMS] DESACTIVE. Message pour {phone_number}: {message}")
             return False, "SMS désactivé dans la configuration"
         
         if not self.client_id or not self.client_secret:
@@ -127,7 +138,7 @@ class OrangeSMSService:
                 timeout=10,
             )
             response.raise_for_status()
-            logger.info(f"SMS envoyé avec succès à {formatted_phone}")
+            print(f"[SMS] SMS envoyé avec succès à {formatted_phone} - Status: {response.status_code}")
             return True, "SMS envoyé avec succès"
             
         except requests.RequestException as e:

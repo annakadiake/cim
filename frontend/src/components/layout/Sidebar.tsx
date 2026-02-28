@@ -9,7 +9,6 @@ import {
   LogOut,
   Home,
   UserCheck,
-  Download,
   ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -65,12 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       href: '/payments',
       icon: CreditCard,
       permission: 'payments',
-    },
-    {
-      label: 'Téléchargement PDF',
-      href: '/invoice-downloads',
-      icon: Download,
-      permission: 'invoices',
     },
     {
       label: 'Comptes Rendus',

@@ -92,6 +92,9 @@ export interface Invoice {
   status_display?: string;
   invoice_date: string;
   due_date: string;
+  subtotal: number;
+  tax_rate: number;
+  tax_amount: number;
   total_amount: number;
   notes?: string;
   items: InvoiceItem[];

@@ -11,6 +11,8 @@ import {
   Building2
 } from 'lucide-react';
 import { api } from '@/lib/api';
+import waveLogo from '@/assets/images/wave.png';
+import orangeMoneyLogo from '@/assets/images/OrangeMoney.png';
 import { Payment, Invoice, PaymentSummary } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -194,9 +196,11 @@ export const Payments: React.FC = () => {
     switch (method) {
       case 'cash':
         return <DollarSign className="w-4 h-4" />;
-      case 'mobile_money':
-      case 'orange_money':
       case 'wave':
+        return <img src={waveLogo} alt="Wave" className="w-5 h-5 object-contain" />;
+      case 'orange_money':
+        return <img src={orangeMoneyLogo} alt="Orange Money" className="w-5 h-5 object-contain" />;
+      case 'mobile_money':
       case 'free_money':
         return <Phone className="w-4 h-4" />;
       case 'bank_transfer':
@@ -388,7 +392,11 @@ export const Payments: React.FC = () => {
                     <div className="md:col-span-1">
                       <div className="text-xs font-semibold text-[#636B2F] mb-1">MÉTHODE</div>
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center">
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${
+                          ['wave', 'orange_money'].includes(payment.payment_method)
+                            ? 'bg-white border border-neutral-200'
+                            : 'bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] text-white'
+                        }`}>
                           {getMethodIcon(payment.payment_method)}
                         </div>
                         <span className="text-sm text-neutral-800 font-medium">
