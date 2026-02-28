@@ -187,15 +187,6 @@ const PatientReports: React.FC = () => {
     }
   };
 
-  const _handleToggleActive = async (reportId: number) => {
-    try {
-      await api.togglePatientReportActive(reportId);
-      fetchReports();
-    } catch (error) {
-      console.error('Erreur lors de la modification du statut:', error);
-    }
-  };
-
   const handleDelete = async (reportId: number) => {
     const ok = await confirm({
       title: 'Supprimer le compte rendu',
