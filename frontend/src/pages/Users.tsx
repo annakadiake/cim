@@ -135,7 +135,7 @@ const Users: React.FC = () => {
 
   const getRoleLabel = (role: string) => {
     switch (role) {
-      case 'superuser': return 'Superutilisateur';
+      case 'superuser': return 'Superutilisateur'; // Gardé pour les logs/debug
       case 'admin': return 'Administrateur';
       case 'doctor': return 'Médecin';
       case 'secretary': return 'Secrétaire';
@@ -162,6 +162,11 @@ const Users: React.FC = () => {
   };
 
   const filteredUsers = users.filter(user => {
+    // Cacher les superutilisateurs de la liste
+    if (user.role === 'superuser') {
+      return false;
+    }
+    
     const matchesSearch = user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -240,10 +245,9 @@ const Users: React.FC = () => {
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300"
+                  className="w-full px-4 py-3 border border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/50 focus:border-[#636B2F] bg-white/80 backdrop-blur-sm"
                 >
                   <option value="">Tous les rôles</option>
-                  <option value="superuser">Superutilisateur</option>
                   <option value="admin">Administrateur</option>
                   <option value="doctor">Médecin</option>
                   <option value="secretary">Secrétaire</option>
@@ -463,7 +467,6 @@ const Users: React.FC = () => {
                     <option value="doctor">Médecin</option>
                     <option value="accountant">Comptable</option>
                     <option value="admin">Administrateur</option>
-                    <option value="superuser">Superutilisateur</option>
                   </select>
                 </div>
                 <div>
