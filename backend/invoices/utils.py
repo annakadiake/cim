@@ -6,6 +6,7 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
 from reportlab.lib.units import cm
 from io import BytesIO
 import os
+from datetime import date
 from django.conf import settings
 
 
@@ -90,10 +91,15 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     patient_title = Paragraph('<b>INFORMATIONS PATIENT</b>', header_style)
     content.append(patient_title)
     
+    # Calculer l'âge du patient
+    today = date.today()
+    dob = invoice.patient.date_of_birth
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    
     patient_data = [
         ['Nom:', invoice.patient.full_name],
         ['Téléphone:', invoice.patient.phone_number],
-        ['Date de naissance:', invoice.patient.date_of_birth.strftime('%d/%m/%Y')],
+        ['Âge:', f'{age} ans'],
     ]
     
     patient_table = Table(patient_data, colWidths=[4*cm, 10*cm])
