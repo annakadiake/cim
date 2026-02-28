@@ -376,125 +376,167 @@ const Users: React.FC = () => {
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-3 px-5 py-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                    Prénom
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.first_name}
-                    onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                    Nom
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.last_name}
-                    onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                  Nom d'utilisateur
-                </label>
-                <input
-                  type="text"
-                  value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
-                  className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                  required
-                />
-              </div>
-
-              {!editingUser && (
-                <div>
-                  <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                    Mot de passe
-                  </label>
-                  <div className="relative">
+              {/* Formulaire réduit pour le superuser : uniquement username et mot de passe */}
+              {editingUser?.role === 'superuser' ? (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      Nom d'utilisateur
+                    </label>
                     <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={formData.password}
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      className="w-full px-3 py-2 pr-10 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
                       required
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 hover:text-[#636B2F]"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
                   </div>
-                </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      Nouveau mot de passe
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password}
+                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                        className="w-full px-3 py-2 pr-10 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        placeholder="Laisser vide pour ne pas changer"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 hover:text-[#636B2F]"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        Prénom
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.first_name}
+                        onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        Nom
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.last_name}
+                        onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      Nom d'utilisateur
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      required
+                    />
+                  </div>
+
+                  {!editingUser && (
+                    <div>
+                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        Mot de passe
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={formData.password}
+                          onChange={(e) => setFormData({...formData, password: e.target.value})}
+                          className="w-full px-3 py-2 pr-10 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 hover:text-[#636B2F]"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        Rôle
+                      </label>
+                      <select
+                        value={formData.role}
+                        onChange={(e) => setFormData({...formData, role: e.target.value as 'superuser' | 'admin' | 'doctor' | 'secretary' | 'accountant'})}
+                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        required
+                      >
+                        <option value="secretary">Secrétaire</option>
+                        <option value="doctor">Médecin</option>
+                        <option value="accountant">Comptable</option>
+                        <option value="admin">Administrateur</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        Département
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.department}
+                        onChange={(e) => setFormData({...formData, department: e.target.value})}
+                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      checked={formData.is_active}
+                      onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                      className="w-4 h-4 rounded border border-[#636B2F]/30 text-[#636B2F] focus:ring-[#636B2F]/30 focus:ring-1"
+                    />
+                    <label htmlFor="is_active" className="ml-2 block text-sm font-semibold text-neutral-700">
+                      Compte actif
+                    </label>
+                  </div>
+                </>
               )}
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                    Rôle
-                  </label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) => setFormData({...formData, role: e.target.value as 'superuser' | 'admin' | 'doctor' | 'secretary' | 'accountant'})}
-                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                    required
-                  >
-                    <option value="secretary">Secrétaire</option>
-                    <option value="doctor">Médecin</option>
-                    <option value="accountant">Comptable</option>
-                    <option value="admin">Administrateur</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                    Département
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.department}
-                    onChange={(e) => setFormData({...formData, department: e.target.value})}
-                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="is_active"
-                  checked={formData.is_active}
-                  onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                  className="w-4 h-4 rounded border border-[#636B2F]/30 text-[#636B2F] focus:ring-[#636B2F]/30 focus:ring-1"
-                />
-                <label htmlFor="is_active" className="ml-2 block text-sm font-semibold text-neutral-700">
-                  Compte actif
-                </label>
-              </div>
 
               <div className="flex justify-end gap-2 pt-3">
                 <button
