@@ -99,11 +99,13 @@ class InvoiceViewSet(viewsets.ModelViewSet):
                         raise serializers.ValidationError(f"Erreur lors de la création de l'item: {str(e)}")
             
             # Calculer et sauvegarder les totaux
+            # TVA incluse dans le prix : le prix de l'examen EST le prix TTC
             tax_rate = float(self.request.data.get('tax_rate', 18.00))  # 18% TVA par défaut
-            tax_amount = subtotal * (tax_rate / 100)
-            total_amount = subtotal + tax_amount
+            total_amount = subtotal  # subtotal ici = somme des prix TTC
+            ht = round(total_amount / (1 + tax_rate / 100))
+            tax_amount = total_amount - ht
             
-            invoice.subtotal = subtotal
+            invoice.subtotal = ht
             invoice.tax_rate = tax_rate
             invoice.tax_amount = tax_amount
             invoice.total_amount = total_amount

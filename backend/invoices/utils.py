@@ -148,11 +148,11 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     content.append(items_table)
     content.append(Spacer(1, 1*cm))
     
-    # Totals
+    # Totals (TVA incluse dans le prix)
     totals_data = [
-        ['Sous-total:', f'{int(invoice.subtotal):,} FCFA'],
-        [f'TVA ({invoice.tax_rate}%):', f'{int(invoice.tax_amount):,} FCFA'],
-        ['TOTAL:', f'{int(invoice.total_amount):,} FCFA']
+        ['Montant HT:', f'{int(invoice.subtotal):,} FCFA'],
+        [f'TVA ({invoice.tax_rate}%) incluse:', f'{int(invoice.tax_amount):,} FCFA'],
+        ['TOTAL TTC:', f'{int(invoice.total_amount):,} FCFA']
     ]
     
     totals_table = Table(totals_data, colWidths=[12*cm, 6*cm])

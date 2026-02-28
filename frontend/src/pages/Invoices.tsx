@@ -261,9 +261,9 @@ const Invoices: React.FC = () => {
                               <span className="text-neutral-700">{formatDate(invoice.invoice_date)}</span>
                             </div>
                             <div className="flex flex-col items-end">
-                              <span className="text-xs text-neutral-500">Sous-total: {formatPrice(invoice.subtotal)}</span>
+                              <span className="text-xs text-neutral-500">HT: {formatPrice(invoice.subtotal)}</span>
                               <span className="text-xs text-neutral-500">TVA ({invoice.tax_rate}%): {formatPrice(invoice.tax_amount)}</span>
-                              <span className="font-semibold text-neutral-800">{formatPrice(invoice.total_amount)}</span>
+                              <span className="font-semibold text-neutral-800">TTC: {formatPrice(invoice.total_amount)}</span>
                             </div>
                           </div>
                         </div>
@@ -385,18 +385,18 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Calculer le sous-total et le total avec TVA
-    const subtotal = items.reduce((sum, item) => sum + (item.unit_price || 0) * (item.quantity || 1), 0);
+    // TVA incluse dans le prix : le prix de l'examen EST le prix TTC
+    const total_ttc = items.reduce((sum, item) => sum + (item.unit_price || 0) * (item.quantity || 1), 0);
     const tax_rate = formData.tax_rate || 18.00;
-    const tax_amount = subtotal * (tax_rate / 100);
-    const total_amount = subtotal + tax_amount;
+    const subtotal_ht = Math.round(total_ttc / (1 + tax_rate / 100));
+    const tax_amount = total_ttc - subtotal_ht;
 
     onSubmit({
       ...formData,
       tax_rate,
-      subtotal,
+      subtotal: subtotal_ht,
       tax_amount,
-      total_amount,
+      total_amount: total_ttc,
       items: items.map((item, index) => ({
         id: item.id || index,
         exam_type: item.exam_type || 0,
@@ -603,11 +603,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                 </div>
                 <div className="flex items-end justify-end">
                   <div className="text-right">
-                    <div className="text-xs text-neutral-600">Sous-total: {new Intl.NumberFormat('fr-FR').format(total_amount)} FCFA</div>
-                    <div className="text-xs text-neutral-600">TVA ({formData.tax_rate || 18.00}%): {new Intl.NumberFormat('fr-FR').format(total_amount * ((formData.tax_rate || 18.00) / 100))} FCFA</div>
                     <div className="text-sm font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
-                      Total: {new Intl.NumberFormat('fr-FR').format(total_amount * (1 + ((formData.tax_rate || 18.00) / 100)))} FCFA
+                      Total TTC: {new Intl.NumberFormat('fr-FR').format(total_amount)} FCFA
                     </div>
+                    <div className="text-xs text-neutral-600">HT: {new Intl.NumberFormat('fr-FR').format(Math.round(total_amount / (1 + (formData.tax_rate || 18.00) / 100)))} FCFA</div>
+                    <div className="text-xs text-neutral-600">TVA ({formData.tax_rate || 18.00}%): {new Intl.NumberFormat('fr-FR').format(total_amount - Math.round(total_amount / (1 + (formData.tax_rate || 18.00) / 100)))} FCFA</div>
                   </div>
                 </div>
               </div>

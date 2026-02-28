@@ -67,10 +67,11 @@ class Invoice(models.Model):
             else:
                 self.invoice_number = "FAC-000001"
         
-        # Calculate subtotal, tax and total
-        self.subtotal = sum(item.total_price for item in self.items.all()) if self.pk else 0
-        self.tax_amount = self.subtotal * (self.tax_rate / 100)
-        self.total_amount = self.subtotal + self.tax_amount
+        # Calculate total, then extract tax (TVA incluse dans le prix)
+        # Le prix de l'examen EST le prix TTC
+        self.total_amount = sum(item.total_price for item in self.items.all()) if self.pk else 0
+        self.subtotal = round(self.total_amount / (1 + self.tax_rate / 100))
+        self.tax_amount = self.total_amount - self.subtotal
         
         super().save(*args, **kwargs)
         
@@ -138,12 +139,14 @@ class InvoiceItem(models.Model):
         # Sauvegarder d'abord l'item
         super().save(*args, **kwargs)
         
-        # Mettre à jour le sous-total de la facture seulement si l'invoice existe
+        # Mettre à jour les totaux de la facture (TVA incluse dans le prix)
         if self.invoice_id:
             try:
                 invoice = self.invoice
                 invoice.total_amount = sum(item.total_price for item in invoice.items.all())
-                invoice.save(update_fields=['total_amount', 'updated_at'])
+                invoice.subtotal = round(invoice.total_amount / (1 + invoice.tax_rate / 100))
+                invoice.tax_amount = invoice.total_amount - invoice.subtotal
+                invoice.save(update_fields=['total_amount', 'subtotal', 'tax_amount', 'updated_at'])
             except Exception as e:
                 # Log l'erreur mais ne pas faire échouer la sauvegarde de l'item
                 print(f"Erreur lors de la mise à jour du sous-total: {e}")
