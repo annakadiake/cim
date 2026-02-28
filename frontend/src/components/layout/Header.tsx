@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <p className="text-xs text-white/80">
               {user?.role === 'superuser' && 'Superutilisateur'}
               {user?.role === 'admin' && 'Administrateur'}
-              {user?.role === 'doctor' && 'Docteur'}
+              {user?.role === 'doctor' && 'Médecin'}
               {user?.role === 'secretary' && 'Secrétaire'}
               {user?.role === 'accountant' && 'Comptable'}
             </p>

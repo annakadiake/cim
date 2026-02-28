@@ -125,7 +125,7 @@ const Users: React.FC = () => {
     switch (role) {
       case 'superuser': return 'Superutilisateur';
       case 'admin': return 'Administrateur';
-      case 'doctor': return 'Docteur';
+      case 'doctor': return 'Médecin';
       case 'secretary': return 'Secrétaire';
       case 'accountant': return 'Comptable';
       default: return role;
@@ -233,7 +233,7 @@ const Users: React.FC = () => {
                   <option value="">Tous les rôles</option>
                   <option value="superuser">Superutilisateur</option>
                   <option value="admin">Administrateur</option>
-                  <option value="doctor">Docteur</option>
+                  <option value="doctor">Médecin</option>
                   <option value="secretary">Secrétaire</option>
                   <option value="accountant">Comptable</option>
                 </select>
@@ -448,7 +448,7 @@ const Users: React.FC = () => {
                     required
                   >
                     <option value="secretary">Secrétaire</option>
-                    <option value="doctor">Docteur</option>
+                    <option value="doctor">Médecin</option>
                     <option value="accountant">Comptable</option>
                     <option value="admin">Administrateur</option>
                     <option value="superuser">Superutilisateur</option>

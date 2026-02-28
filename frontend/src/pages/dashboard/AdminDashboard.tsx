@@ -91,7 +91,7 @@ export const AdminDashboard: React.FC = () => {
 
   const getRoleLabel = (role: string) => {
     const labels: Record<string, string> = {
-      superuser: 'Super', admin: 'Admin', doctor: 'Docteur',
+      superuser: 'Super', admin: 'Admin', doctor: 'Médecin',
       secretary: 'Secrétaire', accountant: 'Comptable',
     };
     return labels[role] || role;

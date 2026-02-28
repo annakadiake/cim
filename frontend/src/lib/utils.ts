@@ -84,7 +84,7 @@ export function getStatusLabel(status: string): string {
     // User roles
     superuser: 'Superutilisateur',
     admin: 'Administrateur',
-    doctor: 'Docteur',
+    doctor: 'Médecin',
     secretary: 'Secrétaire',
     accountant: 'Comptable',
     
