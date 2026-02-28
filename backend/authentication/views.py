@@ -24,9 +24,11 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        # Les administrateurs voient tous les utilisateurs
+        # Les administrateurs voient tous les utilisateurs sauf les superusers
         if self.request.user.is_admin:
-            return User.objects.all()
+            if self.request.user.role == 'superuser':
+                return User.objects.all()
+            return User.objects.exclude(role='superuser')
         # Les autres utilisateurs ne voient que leur propre profil
         return User.objects.filter(id=self.request.user.id)
     
@@ -48,14 +50,26 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def update(self, request, *args, **kwargs):
         self.check_admin_permission(request)
+        target_user = self.get_object()
+        if target_user.role == 'superuser':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Le compte superutilisateur ne peut pas être modifié.")
         return super().update(request, *args, **kwargs)
     
     def partial_update(self, request, *args, **kwargs):
         self.check_admin_permission(request)
+        target_user = self.get_object()
+        if target_user.role == 'superuser':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Le compte superutilisateur ne peut pas être modifié.")
         return super().partial_update(request, *args, **kwargs)
     
     def destroy(self, request, *args, **kwargs):
         self.check_admin_permission(request)
+        target_user = self.get_object()
+        if target_user.role == 'superuser':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Le compte superutilisateur ne peut pas être supprimé.")
         return super().destroy(request, *args, **kwargs)
     
     @action(detail=False, methods=['get'])

@@ -58,7 +58,8 @@ const Users: React.FC = () => {
     try {
       setLoading(true);
       const data = await api.getUsers();
-      setUsers(Array.isArray(data) ? data : data.results || []);
+      const allUsers = Array.isArray(data) ? data : data.results || [];
+      setUsers(allUsers.filter((u: User) => u.role !== 'superuser'));
     } catch (error) {
       console.error('Erreur lors du chargement des utilisateurs:', error);
       setUsers([]);
