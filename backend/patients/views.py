@@ -7,24 +7,31 @@ from django.contrib.auth import get_user_model
 
 class IsSecretaryOrAccountant(BasePermission):
     """
-    Permission personnalisée pour permettre aux secrétaires et comptables
-    d'accéder aux patients selon leurs permissions spécifiques.
+    Permission personnalisée pour permettre aux utilisateurs
+    d'accéder aux patients selon leurs rôles.
     """
     def has_permission(self, request, view):
         user = request.user
         if not user.is_authenticated:
             return False
+        
+        # Superusers et admins ont accès complet
+        if user.role in ['superuser', 'admin']:
+            return True
+        
+        # Les docteurs peuvent lire et créer
+        if user.role == 'doctor':
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
             
         # Les secrétaires peuvent créer, lister et supprimer les patients
         if user.role == 'secretary':
-            return request.method in ['GET', 'POST', 'DELETE', 'HEAD', 'OPTIONS']
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
             
         # Les comptables peuvent seulement lire
         if user.role == 'accountant':
             return request.method in ['GET', 'HEAD', 'OPTIONS']
             
-        # Les autres rôles sont gérés par les permissions Django standard
-        return True
+        return False
 from .models import Patient, PatientAccess
 from .serializers import PatientSerializer, PatientAccessSerializer
 from core.pagination import StandardResultsSetPagination
@@ -37,16 +44,9 @@ class PatientViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         """
-        Instantiates and returns the list of permissions that this view requires.
+        Utiliser notre permission personnalisée pour tous les rôles.
         """
-        if self.request.user.role in ['secretary', 'accountant']:
-            # Utiliser nos permissions personnalisées pour les secrétaires et comptables
-            permission_classes = [IsAuthenticated, IsSecretaryOrAccountant]
-        else:
-            # Pour les autres rôles, utiliser les permissions Django standard
-            permission_classes = [IsAuthenticated, DjangoModelPermissions]
-            
-        return [permission() for permission in permission_classes]
+        return [IsAuthenticated(), IsSecretaryOrAccountant()]
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = PatientFilter
