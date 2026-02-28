@@ -11,6 +11,7 @@ import {
   UserCheck,
   ChevronRight
 } from 'lucide-react';
+import cimefLogo from '@/assets/images/cimef.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
@@ -104,7 +105,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               {/* Logo personnalisé */}
               <div className="w-full bg-white rounded-xl flex items-center justify-center shadow-lg p-2">
                 <img
-                  src="/src/assets/images/cimef.png"
+                  src={cimefLogo}
                   alt="Logo"
                   className="w-32 h-auto object-contain"
                   onError={(e) => {

@@ -8,6 +8,7 @@ import { api } from '@/lib/api';
 import { PatientReport, PatientLoginResponse } from '@/types';
 import { formatDate, formatDateTime, downloadBlob } from '@/lib/utils';
 import { useToast } from '@/components/ui/Toast';
+import cimefLogo from '@/assets/images/cimef.png';
 
 export const PatientDashboard: React.FC = () => {
   const toast = useToast();
@@ -82,7 +83,7 @@ export const PatientDashboard: React.FC = () => {
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md">
                 <img
-                  src="/src/assets/images/cimef.png"
+                  src={cimefLogo}
                   alt="CIMEF Logo"
                   className="w-10 h-10 object-contain"
                   onError={(e) => {

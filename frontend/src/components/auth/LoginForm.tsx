@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { User, Lock, AlertCircle } from 'lucide-react';
+import cimefLogo from '@/assets/images/cimef.png';
 
 export const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({
@@ -50,7 +51,7 @@ export const LoginForm: React.FC = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-28 h-28 bg-white/90 backdrop-blur-sm rounded-2xl mb-4 shadow-xl border border-white/20">
             <img
-              src="/src/assets/images/cimef.png"
+              src={cimefLogo}
               alt="CIMEF Logo"
               className="w-24 h-24 object-contain"
               onError={(e) => {

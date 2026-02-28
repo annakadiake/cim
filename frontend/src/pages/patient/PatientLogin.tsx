@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Key, Lock, AlertCircle, ArrowLeft } from 'lucide-react';
 import { api } from '@/lib/api';
 import { PatientLoginCredentials, PatientLoginResponse } from '@/types';
+import cimefLogo from '@/assets/images/cimef.png';
 
 export const PatientLogin: React.FC = () => {
   const [credentials, setCredentials] = useState<PatientLoginCredentials>({
@@ -76,7 +77,7 @@ export const PatientLogin: React.FC = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-2xl mb-4 shadow-xl border border-white/20">
             <img
-              src="/src/assets/images/cimef.png"
+              src={cimefLogo}
               alt="CIMEF Logo"
               className="w-20 h-20 object-contain"
               onError={(e) => {
