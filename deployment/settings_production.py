@@ -17,24 +17,22 @@ DEBUG = False
 # Mettre votre domaine et IP ici
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(',')
 
-# Sécurité HTTPS
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# Sécurité HTTPS (activer quand vous aurez un domaine + SSL)
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
-# CORS - Restreindre aux domaines autorisés
+# CORS
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    'https://votre-domaine.com',
-    'https://www.votre-domaine.com',
+    'http://147.182.252.89',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://votre-domaine.com',
-    'https://www.votre-domaine.com',
+    'http://147.182.252.89',
 ]
 
 # Logging production
