@@ -72,7 +72,13 @@ const Users: React.FC = () => {
     e.preventDefault();
     try {
       if (editingUser) {
-        await api.updateUser(editingUser.id, formData);
+        if (editingUser.role === 'superuser') {
+          const superData: Record<string, string> = { username: formData.username };
+          if (formData.password) superData.password = formData.password;
+          await api.updateUser(editingUser.id, superData);
+        } else {
+          await api.updateUser(editingUser.id, formData);
+        }
       } else {
         await api.createUser(formData);
       }
@@ -81,8 +87,10 @@ const Users: React.FC = () => {
       setEditingUser(null);
       resetForm();
       fetchUsers();
+      toast.success(editingUser ? 'Utilisateur modifié avec succès' : 'Utilisateur créé avec succès');
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
+      toast.error('Erreur lors de la sauvegarde');
     }
   };
 

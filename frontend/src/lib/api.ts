@@ -244,7 +244,7 @@ class ApiClient {
   }
 
   async updateUser(id: number, userData: any): Promise<any> {
-    const response = await this.client.put(`/auth/users/${id}/`, userData);
+    const response = await this.client.patch(`/auth/users/${id}/`, userData);
     return response.data;
   }
 
