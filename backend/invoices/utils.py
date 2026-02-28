@@ -107,51 +107,12 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     content.append(patient_table)
     content.append(Spacer(1, 1*cm))
     
-    # Section clés d'accès patient (TOUJOURS affichée pour debug)
-    print(f"DEBUG PDF: patient_access_keys = {patient_access_keys}")
-    
-    # Forcer l'affichage des clés même si None pour debug
-    keys_title = Paragraph('<b>🔑 CLÉS D\'ACCÈS PATIENT</b>', 
-                          ParagraphStyle(
-                              'KeysTitle',
-                              parent=styles['Normal'],
-                              fontSize=14,
-                              textColor=colors.HexColor('#3F4A1F'),
-                              alignment=TA_LEFT,
-                              fontName='Helvetica-Bold'
-                          ))
-    content.append(keys_title)
-    content.append(Spacer(1, 0.3*cm))
-    
-    if patient_access_keys:
-        keys_data = [
-            ['Identifiant:', patient_access_keys.get('access_key', 'N/A')],
-            ['Mot de passe:', patient_access_keys.get('password', 'N/A')],
-            ['Valide jusqu\'au:', patient_access_keys.get('valid_until', 'N/A')]
-        ]
-    else:
-        keys_data = [
-            ['Identifiant:', 'ERREUR - Clés non générées'],
-            ['Mot de passe:', 'ERREUR - Clés non générées'],
-            ['Valide jusqu\'au:', 'ERREUR - Clés non générées']
-        ]
-    
-    keys_table = Table(keys_data, colWidths=[4*cm, 10*cm])
-    keys_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f6f8f0')),
-        ('BOX', (0, 0), (-1, -1), 2, colors.HexColor('#3F4A1F')),
-        ('INNERGRID', (0, 0), (-1, -1), 1, colors.HexColor('#3F4A1F')),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 11),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 8),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-        ('TOPPADDING', (0, 0), (-1, -1), 8),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-    ]))
-    
-    content.append(keys_table)
-    content.append(Spacer(1, 1*cm))
+    # Section clés d'accès patient - MASQUÉE temporairement (SMS Orange pas encore opérationnel)
+    # TODO: Décommenter quand le SMS Orange fonctionnera pour envoyer les clés aux patients
+    # if patient_access_keys:
+    #     keys_title = Paragraph('<b>🔑 CLÉS D\'ACCÈS PATIENT</b>', ...)
+    #     content.append(keys_title)
+    #     ...
     
     # Items table
     items_title = Paragraph('<b>DÉTAIL DES EXAMENS</b>', header_style)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Upload, Search, Filter, X, Eye, Trash2, Calendar } from 'lucide-react';
+import { FileText, Download, Upload, Search, Filter, X, Trash2, Calendar } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../lib/api';
 
@@ -330,7 +330,7 @@ const PatientReports: React.FC = () => {
         <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-[#636B2F]/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
           <div className="flex items-center">
             <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Eye className="h-6 w-6 text-white" />
+              <FileText className="h-6 w-6 text-white" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-neutral-600">Actifs</p>
@@ -443,17 +443,6 @@ const PatientReports: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => handleToggleActive(report.id)}
-                        className={`p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
-                          report.is_active 
-                            ? 'text-red-600 hover:text-red-700 hover:bg-red-50' 
-                            : 'text-green-600 hover:text-green-700 hover:bg-green-50'
-                        }`}
-                        title={report.is_active ? 'Désactiver' : 'Activer'}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
                       {canDelete && (
                         <button
                           onClick={() => handleDelete(report.id)}
