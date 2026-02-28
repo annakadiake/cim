@@ -85,7 +85,7 @@ DATABASES = {
 # SSL pour DigitalOcean Managed Database
 if 'ondigitalocean.com' in DATABASES['default']['HOST']:
     DATABASES['default']['OPTIONS'] = {
-        'ssl': {'ca': os.path.join(BASE_DIR, '..', 'ca-certificate.crt')}
+        'ssl': {'mode': 'REQUIRED'}
     }
 
 
