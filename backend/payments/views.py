@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
@@ -12,10 +12,38 @@ from .serializers import PaymentSerializer, PaymentSummarySerializer
 from core.pagination import StandardResultsSetPagination
 from core.filters import PaymentFilter
 
+class IsPaymentPermission(BasePermission):
+    """
+    Permission personnalisée pour les paiements selon les rôles.
+    """
+    def has_permission(self, request, view):
+        user = request.user
+        if not user.is_authenticated:
+            return False
+        
+        # Superusers et admins ont accès complet
+        if user.role in ['superuser', 'admin']:
+            return True
+        
+        # Les comptables ont accès complet aux paiements
+        if user.role == 'accountant':
+            return True
+        
+        # Les secrétaires peuvent créer et lire les paiements
+        if user.role == 'secretary':
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+            
+        # Les docteurs peuvent seulement lire
+        if user.role == 'doctor':
+            return request.method in ['GET', 'HEAD', 'OPTIONS']
+            
+        return False
+
+
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.select_related('invoice', 'invoice__patient', 'recorded_by').all()
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsPaymentPermission]
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = PaymentFilter

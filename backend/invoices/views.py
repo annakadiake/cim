@@ -2,7 +2,7 @@ from decimal import Decimal
 from rest_framework import viewsets, filters, status, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
 from django.db import transaction
@@ -14,10 +14,38 @@ from exams.models import ExamType
 from core.pagination import StandardResultsSetPagination
 from core.filters import InvoiceFilter
 
+class IsInvoicePermission(BasePermission):
+    """
+    Permission personnalisée pour les factures selon les rôles.
+    """
+    def has_permission(self, request, view):
+        user = request.user
+        if not user.is_authenticated:
+            return False
+        
+        # Superusers et admins ont accès complet
+        if user.role in ['superuser', 'admin']:
+            return True
+        
+        # Les secrétaires peuvent créer et lire les factures
+        if user.role == 'secretary':
+            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+        
+        # Les comptables ont accès complet aux factures
+        if user.role == 'accountant':
+            return True
+            
+        # Les docteurs peuvent seulement lire
+        if user.role == 'doctor':
+            return request.method in ['GET', 'HEAD', 'OPTIONS']
+            
+        return False
+
+
 class InvoiceViewSet(viewsets.ModelViewSet):
     queryset = Invoice.objects.select_related('patient', 'created_by').prefetch_related('items', 'payments').all()
     serializer_class = InvoiceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInvoicePermission]
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = InvoiceFilter

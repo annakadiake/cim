@@ -32,11 +32,31 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         """
-        Seuls les administrateurs peuvent créer, mettre à jour ou supprimer des utilisateurs
+        Seuls les administrateurs et superutilisateurs peuvent créer, mettre à jour ou supprimer des utilisateurs.
         """
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            self.permission_classes = [permissions.IsAdminUser]
-        return super().get_permissions()
+        return [permissions.IsAuthenticated()]
+    
+    def check_admin_permission(self, request):
+        """Vérifie si l'utilisateur a le rôle admin ou superuser."""
+        if request.user.role not in ['superuser', 'admin']:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Vous n'avez pas la permission d'effectuer cette action.")
+    
+    def create(self, request, *args, **kwargs):
+        self.check_admin_permission(request)
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        self.check_admin_permission(request)
+        return super().update(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+        self.check_admin_permission(request)
+        return super().partial_update(request, *args, **kwargs)
+    
+    def destroy(self, request, *args, **kwargs):
+        self.check_admin_permission(request)
+        return super().destroy(request, *args, **kwargs)
     
     @action(detail=False, methods=['get'])
     def me(self, request):
