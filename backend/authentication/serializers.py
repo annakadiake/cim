@@ -21,6 +21,17 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not self.user.is_active:
             raise serializers.ValidationError("Ce compte est désactivé. Veuillez contacter l'administrateur.")
         
+        # Créer une notification de connexion
+        from .models import LoginNotification
+        request = self.context.get('request')
+        ip_address = None
+        if request:
+            ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
+        LoginNotification.objects.create(
+            user=self.user,
+            ip_address=ip_address,
+        )
+        
         # Informations utilisateur avec rôle
         data['user'] = {
             'id': self.user.id,
@@ -65,3 +76,20 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         
         return user
+
+
+class LoginNotificationSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+    user_role = serializers.SerializerMethodField()
+
+    class Meta:
+        from .models import LoginNotification
+        model = LoginNotification
+        fields = ['id', 'user', 'user_name', 'user_role', 'login_time', 'ip_address', 'is_read']
+        read_only_fields = ['id', 'user', 'user_name', 'user_role', 'login_time', 'ip_address']
+
+    def get_user_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username
+
+    def get_user_role(self, obj):
+        return obj.user.get_role_display()

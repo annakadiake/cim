@@ -7,7 +7,9 @@ from .models import User
 from .serializers import (
     CustomTokenObtainPairSerializer, 
     UserSerializer,
+    LoginNotificationSerializer,
 )
+from .models import LoginNotification
 
 User = get_user_model()
 
@@ -207,3 +209,44 @@ def accountant_stats(request):
             total=models.Sum('total_amount'))['total'] or 0,
     }
     return Response(stats)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def login_notifications(request):
+    """Liste des notifications de connexion pour admin/superuser"""
+    if request.user.role not in ['superuser', 'admin']:
+        return Response({'detail': 'Accès refusé'}, status=403)
+    
+    notifications = LoginNotification.objects.select_related('user').all()[:50]
+    serializer = LoginNotificationSerializer(notifications, many=True)
+    unread_count = LoginNotification.objects.filter(is_read=False).count()
+    return Response({
+        'results': serializer.data,
+        'unread_count': unread_count,
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_notification_read(request, pk):
+    """Marquer une notification comme lue"""
+    if request.user.role not in ['superuser', 'admin']:
+        return Response({'detail': 'Accès refusé'}, status=403)
+    try:
+        notif = LoginNotification.objects.get(pk=pk)
+        notif.is_read = True
+        notif.save()
+        return Response({'status': 'ok'})
+    except LoginNotification.DoesNotExist:
+        return Response({'detail': 'Notification introuvable'}, status=404)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_all_notifications_read(request):
+    """Marquer toutes les notifications comme lues"""
+    if request.user.role not in ['superuser', 'admin']:
+        return Response({'detail': 'Accès refusé'}, status=403)
+    LoginNotification.objects.filter(is_read=False).update(is_read=True)
+    return Response({'status': 'ok'})

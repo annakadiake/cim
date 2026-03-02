@@ -323,6 +323,22 @@ class ApiClient {
     const response = await this.client.get(`/payments/by_invoice/?invoice_id=${invoiceId}`);
     return response.data;
   }
+
+  // Notifications
+  async getLoginNotifications(): Promise<any> {
+    const response = await this.client.get('/auth/notifications/');
+    return response.data;
+  }
+
+  async markNotificationRead(id: number): Promise<any> {
+    const response = await this.client.post(`/auth/notifications/${id}/read/`);
+    return response.data;
+  }
+
+  async markAllNotificationsRead(): Promise<any> {
+    const response = await this.client.post('/auth/notifications/read-all/');
+    return response.data;
+  }
 }
 
 export const api = new ApiClient();

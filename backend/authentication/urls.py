@@ -8,7 +8,10 @@ from .views import (
     system_stats,
     admin_stats,
     secretary_stats,
-    accountant_stats
+    accountant_stats,
+    login_notifications,
+    mark_notification_read,
+    mark_all_notifications_read,
 )
 from .views_dashboard import (
     AdminDashboardView,
@@ -30,5 +33,8 @@ urlpatterns = [
     path('doctor-stats/', DoctorDashboardView.as_view(), name='doctor_stats'),
     path('secretary-stats/', SecretaryDashboardView.as_view(), name='secretary_stats'),
     path('accountant-stats/', AccountantDashboardView.as_view(), name='accountant_stats'),
+    path('notifications/', login_notifications, name='login_notifications'),
+    path('notifications/<int:pk>/read/', mark_notification_read, name='mark_notification_read'),
+    path('notifications/read-all/', mark_all_notifications_read, name='mark_all_notifications_read'),
     path('', include(router.urls)),
 ]

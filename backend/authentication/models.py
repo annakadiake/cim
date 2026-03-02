@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 class User(AbstractUser):
     """
@@ -88,3 +89,19 @@ class User(AbstractUser):
             'accountant': ['invoices', 'invoices_full', 'payments', 'patients'],
         }
         return permissions.get(self.role, [])
+
+
+class LoginNotification(models.Model):
+    """Notification de connexion utilisateur pour les admins"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='login_notifications', verbose_name="Utilisateur")
+    login_time = models.DateTimeField(default=timezone.now, verbose_name="Date/Heure de connexion")
+    ip_address = models.GenericIPAddressField(blank=True, null=True, verbose_name="Adresse IP")
+    is_read = models.BooleanField(default=False, verbose_name="Lu")
+
+    class Meta:
+        verbose_name = "Notification de connexion"
+        verbose_name_plural = "Notifications de connexion"
+        ordering = ['-login_time']
+
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username} - {self.login_time.strftime('%d/%m/%Y %H:%M')}"
