@@ -39,8 +39,11 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       async (error) => {
-        if (error.response?.status === 401) {
-          // Token expiré, essayer de le renouveler
+        const originalRequest = error.config;
+        // Ne pas intercepter les requêtes d'auth (login, refresh) pour éviter les boucles
+        const isAuthRequest = originalRequest?.url?.includes('/auth/token');
+        if (error.response?.status === 401 && !isAuthRequest && !originalRequest._retry) {
+          originalRequest._retry = true;
           const refreshToken = localStorage.getItem('refresh_token');
           if (refreshToken) {
             try {
@@ -48,8 +51,8 @@ class ApiClient {
               localStorage.setItem('access_token', response.data.access);
               
               // Retry la requête originale
-              error.config.headers.Authorization = `Bearer ${response.data.access}`;
-              return this.client.request(error.config);
+              originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+              return this.client.request(originalRequest);
             } catch (refreshError) {
               // Refresh failed, redirect to login
               this.logout();
