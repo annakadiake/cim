@@ -9,6 +9,7 @@ import { Layout } from './components/layout/Layout';
 import { PatientLogin } from './pages/patient/PatientLogin';
 import { PatientDashboard } from './pages/patient/PatientDashboard';
 import { Patients } from './pages/Patients';
+import PatientDetail from './pages/PatientDetail';
 import Exams from './pages/Exams';
 import Invoices from './pages/Invoices';
 import { Payments } from './pages/Payments';
@@ -43,6 +44,11 @@ function App() {
             <Route path="patients" element={
               <ProtectedRoute permission="patients">
                 <Patients />
+              </ProtectedRoute>
+            } />
+            <Route path="patients/:id" element={
+              <ProtectedRoute permission="patients">
+                <PatientDetail />
               </ProtectedRoute>
             } />
             

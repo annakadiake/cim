@@ -45,7 +45,7 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#636B2F]/10 via-white to-[#3F4A1F]/10 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#7a8345]/10 via-white to-[#5a6332]/10 px-4">
       <div className="w-full max-w-md">
         {/* Logo et titre */}
         <div className="text-center mb-8">
@@ -65,8 +65,8 @@ export const LoginForm: React.FC = () => {
         </div>
 
         <Card className="shadow-xl bg-white/70 backdrop-blur-sm border border-white/20">
-          <CardHeader className="text-center bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-t-lg">
-            <CardTitle className="text-xl bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent font-bold">
+          <CardHeader className="text-center bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-t-lg">
+            <CardTitle className="text-xl bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent font-bold">
               Connexion Personnel
             </CardTitle>
           </CardHeader>
@@ -106,7 +106,7 @@ export const LoginForm: React.FC = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] hover:from-[#636B2F]/90 hover:to-[#3F4A1F]/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full bg-gradient-to-r from-[#7a8345] to-[#5a6332] hover:from-[#7a8345]/90 hover:to-[#5a6332]/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 loading={isLoading}
                 disabled={!credentials.username || !credentials.password}
               >
@@ -124,7 +124,7 @@ export const LoginForm: React.FC = () => {
           <Button
             variant="outline"
             onClick={() => navigate('/patient')}
-            className="text-[#3F4A1F] border-[#3F4A1F]/30 hover:bg-[#3F4A1F]/10 hover:border-[#3F4A1F]/50 transition-all duration-200"
+            className="text-[#5a6332] border-[#5a6332]/30 hover:bg-[#5a6332]/10 hover:border-[#5a6332]/50 transition-all duration-200"
           >
             Accéder au portail patient
           </Button>

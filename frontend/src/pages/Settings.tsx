@@ -111,15 +111,15 @@ const Settings: React.FC = () => {
     { id: 'backup', label: 'Sauvegarde', icon: RefreshCw }
   ];
 
-  const inputClass = "w-full px-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300 bg-white/80 backdrop-blur-sm";
-  const labelClass = "block text-sm font-semibold text-[#3F4A1F] mb-2";
-  const checkboxClass = "w-5 h-5 rounded-lg border-2 border-[#636B2F]/30 text-[#636B2F] focus:ring-[#636B2F]/30 focus:ring-2 transition-all duration-300";
-  const sectionTitleClass = "text-lg font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent";
+  const inputClass = "w-full px-4 py-3 border-2 border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all duration-300 bg-white/80 backdrop-blur-sm";
+  const labelClass = "block text-sm font-semibold text-[#5a6332] mb-2";
+  const checkboxClass = "w-5 h-5 rounded-lg border-2 border-[#7a8345]/30 text-[#7a8345] focus:ring-[#7a8345]/30 focus:ring-2 transition-all duration-300";
+  const sectionTitleClass = "text-lg font-bold bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent";
 
   if (loading && !settings.hospital_name) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#636B2F]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7a8345]"></div>
       </div>
     );
   }
@@ -127,10 +127,10 @@ const Settings: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-2xl p-6 border border-[#636B2F]/20">
+      <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-2xl p-6 border border-[#7a8345]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-xl flex items-center justify-center shadow-lg">
               <SettingsIcon className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -144,7 +144,7 @@ const Settings: React.FC = () => {
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 ${
               saved 
                 ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
-                : 'bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white'
+                : 'bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white'
             }`}
           >
             {loading ? (
@@ -164,9 +164,9 @@ const Settings: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#636B2F]/20 overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#7a8345]/20 overflow-hidden">
         {/* Onglets */}
-        <div className="border-b border-[#636B2F]/20 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5">
+        <div className="border-b border-[#7a8345]/20 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5">
           <nav className="flex space-x-1 px-4 overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -176,8 +176,8 @@ const Settings: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-all duration-300 whitespace-nowrap ${
                     activeTab === tab.id
-                      ? 'border-[#636B2F] text-[#636B2F] bg-white/50'
-                      : 'border-transparent text-neutral-500 hover:text-[#636B2F] hover:border-[#636B2F]/30'
+                      ? 'border-[#7a8345] text-[#7a8345] bg-white/50'
+                      : 'border-transparent text-neutral-500 hover:text-[#7a8345] hover:border-[#7a8345]/30'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -292,7 +292,7 @@ const Settings: React.FC = () => {
 
               <div>
                 <label className={labelClass}>Méthodes de paiement acceptées</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 p-4 rounded-xl border border-[#636B2F]/10">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 p-4 rounded-xl border border-[#7a8345]/10">
                   {[
                     { value: 'cash', label: 'Espèces' },
                     { value: 'card', label: 'Carte bancaire' },
@@ -320,7 +320,7 @@ const Settings: React.FC = () => {
             <div className="space-y-6">
               <h3 className={sectionTitleClass}>Paramètres de notification</h3>
               
-              <div className="space-y-4 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 p-6 rounded-xl border border-[#636B2F]/10">
+              <div className="space-y-4 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 p-6 rounded-xl border border-[#7a8345]/10">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -348,11 +348,11 @@ const Settings: React.FC = () => {
             <div className="space-y-6">
               <h3 className={sectionTitleClass}>Paramètres de sécurité</h3>
               
-              <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 border border-[#636B2F]/20 rounded-xl p-6">
+              <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 border border-[#7a8345]/20 rounded-xl p-6">
                 <div className="flex items-start space-x-3">
-                  <Shield className="h-6 w-6 text-[#636B2F] mt-0.5" />
+                  <Shield className="h-6 w-6 text-[#7a8345] mt-0.5" />
                   <div>
-                    <h3 className="text-sm font-bold text-[#3F4A1F]">
+                    <h3 className="text-sm font-bold text-[#5a6332]">
                       Configuration avancée
                     </h3>
                     <div className="mt-2 text-sm text-neutral-600">
@@ -390,7 +390,7 @@ const Settings: React.FC = () => {
             <div className="space-y-6">
               <h3 className={sectionTitleClass}>Sauvegarde automatique</h3>
               
-              <div className="space-y-4 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 p-6 rounded-xl border border-[#636B2F]/10">
+              <div className="space-y-4 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 p-6 rounded-xl border border-[#7a8345]/10">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -418,8 +418,8 @@ const Settings: React.FC = () => {
                 )}
               </div>
 
-              <div className="border-t border-[#636B2F]/10 pt-6">
-                <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-semibold">
+              <div className="border-t border-[#7a8345]/10 pt-6">
+                <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-semibold">
                   <Database className="h-4 w-4" />
                   Créer une sauvegarde maintenant
                 </button>

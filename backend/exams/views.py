@@ -22,16 +22,8 @@ class IsExamPermission(BasePermission):
         if user.role in ['superuser', 'admin']:
             return True
         
-        # Les docteurs peuvent lire et créer
-        if user.role == 'doctor':
-            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
-            
-        # Les secrétaires peuvent lire et créer
-        if user.role == 'secretary':
-            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
-            
-        # Les comptables peuvent seulement lire
-        if user.role == 'accountant':
+        # Les autres rôles peuvent seulement lire
+        if user.role in ['doctor', 'secretary', 'accountant']:
             return request.method in ['GET', 'HEAD', 'OPTIONS']
             
         return False

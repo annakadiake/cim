@@ -81,19 +81,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const rolePermissions: Record<string, string[]> = {
       doctor: [
         'patients', 'patients_create', 'patients_edit',
-        'exams', 'exams_create', 'exams_edit',
-        'reports', 'reports_create', 'reports_edit',
+        'exams',
         'invoices',
+        'reports', 'reports_create', 'reports_edit',
       ],
       secretary: [
         'patients', 'patients_create', 'patients_edit', 'patients_delete',
-        'exams', 'exams_create', 'exams_edit',
+        'exams',
         'invoices', 'invoices_create', 'invoices_edit',
         'payments', 'payments_create', 'payments_edit',
         'reports', 'reports_create', 'reports_edit',
       ],
       accountant: [
         'patients',
+        'exams',
         'invoices', 'invoices_full', 'invoices_create', 'invoices_edit', 'invoices_delete',
         'payments', 'payments_create', 'payments_edit', 'payments_delete',
       ],

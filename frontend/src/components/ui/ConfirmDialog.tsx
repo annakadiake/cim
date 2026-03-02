@@ -31,9 +31,9 @@ const variantConfig = {
   },
   info: {
     icon: Info,
-    iconBg: 'bg-[#636B2F]/10',
-    iconColor: 'text-[#636B2F]',
-    btnClass: 'bg-[#636B2F] hover:bg-[#3F4A1F] focus:ring-[#636B2F]',
+    iconBg: 'bg-[#7a8345]/10',
+    iconColor: 'text-[#7a8345]',
+    btnClass: 'bg-[#7a8345] hover:bg-[#5a6332] focus:ring-[#7a8345]',
   },
 };
 

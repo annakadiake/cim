@@ -22,8 +22,8 @@ const Exams: React.FC = () => {
   const [sortBy, setSortBy] = useState('name');
 
   // Permissions
-  const canCreate = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'doctor' || user?.role === 'secretary';
-  const canEdit = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'doctor' || user?.role === 'secretary';
+  const canCreate = user?.role === 'superuser' || user?.role === 'admin';
+  const canEdit = user?.role === 'superuser' || user?.role === 'admin';
   const canDelete = user?.role === 'superuser' || user?.role === 'admin';
 
   useEffect(() => {
@@ -96,15 +96,6 @@ const Exams: React.FC = () => {
     }
   };
 
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0) {
-      return `${hours}h${mins > 0 ? ` ${mins}min` : ''}`;
-    }
-    return `${mins}min`;
-  };
-
   // Filter and sort exam types
   const filteredExamTypes = examTypes
     .filter((exam) => {
@@ -132,10 +123,10 @@ const Exams: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-2xl p-6 border border-[#636B2F]/20">
+      <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-2xl p-6 border border-[#7a8345]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-xl flex items-center justify-center shadow-lg">
               <Stethoscope className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -146,7 +137,7 @@ const Exams: React.FC = () => {
           {canCreate && (
             <button
               onClick={handleCreateExam}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-medium"
             >
               <Plus className="w-5 h-5" />
               Nouvel Examen
@@ -156,17 +147,17 @@ const Exams: React.FC = () => {
       </div>
 
       {/* Filtres */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-6 shadow-lg">
+      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-6 shadow-lg">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#636B2F] w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7a8345] w-5 h-5" />
               <input
                 type="text"
                 placeholder="Rechercher un examen..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                className="w-full pl-12 pr-4 py-3 border-2 border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all duration-300 bg-white/80 backdrop-blur-sm"
               />
             </div>
           </div>
@@ -175,7 +166,7 @@ const Exams: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-3 border-2 border-[#3F4A1F]/20 rounded-xl focus:ring-2 focus:ring-[#3F4A1F]/30 focus:border-[#3F4A1F] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
+              className="px-4 py-3 border-2 border-[#5a6332]/20 rounded-xl focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
             >
               <option value="all">Tous les statuts</option>
               <option value="active">Actifs</option>
@@ -185,11 +176,10 @@ const Exams: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
+              className="px-4 py-3 border-2 border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
             >
               <option value="name">Trier par nom</option>
               <option value="price">Trier par prix</option>
-              <option value="duration">Trier par durée</option>
             </select>
           </div>
         </div>
@@ -198,42 +188,33 @@ const Exams: React.FC = () => {
       {/* Liste des examens */}
       <div className="space-y-4">
         {loading ? (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-8 text-center shadow-lg">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#636B2F] mx-auto"></div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-8 text-center shadow-lg">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7a8345] mx-auto"></div>
             <p className="mt-2 text-neutral-600">Chargement des examens...</p>
           </div>
         ) : filteredExamTypes.length === 0 ? (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-8 text-center shadow-lg">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-8 text-center shadow-lg">
             <Stethoscope className="w-12 h-12 text-neutral-400 mx-auto mb-4" />
             <p className="text-neutral-600">Aucun examen trouvé</p>
           </div>
         ) : (
           <div className="grid gap-4">
             {filteredExamTypes.map((exam) => (
-              <Card key={exam.id} className="bg-white/80 backdrop-blur-sm border-2 border-[#636B2F]/10 hover:border-[#636B2F]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-xl overflow-hidden">
+              <Card key={exam.id} className="bg-white/80 backdrop-blur-sm border-2 border-[#7a8345]/10 hover:border-[#7a8345]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#636B2F]/20 to-[#3F4A1F]/20 rounded-lg flex items-center justify-center">
-                          <Stethoscope className="w-5 h-5 text-[#636B2F]" />
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#7a8345]/20 to-[#5a6332]/20 rounded-lg flex items-center justify-center">
+                          <Stethoscope className="w-5 h-5 text-[#7a8345]" />
                         </div>
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-neutral-800 mb-1">{exam.name}</h3>
-                          <p className="text-sm text-neutral-600 mb-2">
-                            {exam.description || 'Aucune description disponible'}
-                          </p>
                           <div className="flex items-center space-x-6 text-sm">
                             <div className="flex items-center space-x-2">
-                              <span className="font-medium text-[#636B2F]">Prix:</span>
+                              <span className="font-medium text-[#7a8345]">Prix:</span>
                               <span className="text-neutral-700">
-                                {exam.price ? `${exam.price} FCFA` : 'Non défini'}
-                              </span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="font-medium text-[#3F4A1F]">Durée:</span>
-                              <span className="text-neutral-700">
-                                {exam.duration_minutes ? formatDuration(exam.duration_minutes) : 'Non définie'}
+                                {exam.price ? `${Number(exam.price).toLocaleString()} FCFA` : 'Non défini'}
                               </span>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -255,7 +236,7 @@ const Exams: React.FC = () => {
                       {canEdit && (
                         <button
                           onClick={() => handleEditExam(exam)}
-                          className="p-2 text-[#636B2F] hover:bg-[#636B2F]/10 rounded-lg transition-all duration-300 hover:scale-110"
+                          className="p-2 text-[#7a8345] hover:bg-[#7a8345]/10 rounded-lg transition-all duration-300 hover:scale-110"
                           title="Modifier l'examen"
                         >
                           <Edit2 className="w-5 h-5" />
@@ -282,23 +263,23 @@ const Exams: React.FC = () => {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center">
-          <div className="flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-4 shadow-lg">
+          <div className="flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-4 shadow-lg">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 text-sm border-2 border-[#636B2F]/20 rounded-lg hover:bg-[#636B2F]/10 hover:border-[#636B2F] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
+              className="px-4 py-2 text-sm border-2 border-[#7a8345]/20 rounded-lg hover:bg-[#7a8345]/10 hover:border-[#7a8345] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
             >
               Précédent
             </button>
             
-            <span className="px-4 py-2 text-sm text-neutral-700 font-medium bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-lg">
+            <span className="px-4 py-2 text-sm text-neutral-700 font-medium bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-lg">
               Page {currentPage} sur {totalPages}
             </span>
             
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 text-sm border-2 border-[#3F4A1F]/20 rounded-lg hover:bg-[#3F4A1F]/10 hover:border-[#3F4A1F] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
+              className="px-4 py-2 text-sm border-2 border-[#5a6332]/20 rounded-lg hover:bg-[#5a6332]/10 hover:border-[#5a6332] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
             >
               Suivant
             </button>
@@ -350,13 +331,13 @@ const ExamModal: React.FC<ExamModalProps> = ({ exam, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <div className="bg-white/95 backdrop-blur-sm rounded-xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-[#636B2F]/20" onClick={(e) => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 px-5 py-3 rounded-t-xl border-b border-[#636B2F]/20">
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-[#7a8345]/20" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 px-5 py-3 rounded-t-xl border-b border-[#7a8345]/20">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center">
               <Stethoscope className="w-4 h-4 text-white" />
             </div>
-            <h2 className="text-lg font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent">
               {exam ? 'Modifier l\'examen' : 'Nouvel examen'}
             </h2>
           </div>
@@ -365,7 +346,7 @@ const ExamModal: React.FC<ExamModalProps> = ({ exam, onClose, onSubmit }) => {
           
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+              <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                 Nom de l'examen *
               </label>
               <input
@@ -374,74 +355,42 @@ const ExamModal: React.FC<ExamModalProps> = ({ exam, onClose, onSubmit }) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                 placeholder="Ex: Radiographie thoracique"
               />
             </div>
             
             <div>
-              <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                Description
+              <label className="block text-xs font-semibold text-[#7a8345] mb-1">
+                Prix (FCFA) *
               </label>
-              <textarea
-                name="description"
-                value={formData.description}
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
                 onChange={handleChange}
-                rows={2}
-                className="w-full px-3 py-2 border border-[#3F4A1F]/20 rounded-lg focus:ring-2 focus:ring-[#3F4A1F]/30 focus:border-[#3F4A1F] transition-all text-sm resize-none"
-                placeholder="Description détaillée de l'examen..."
+                required
+                min="0"
+                step="1"
+                className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
+                placeholder="15000"
               />
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#636B2F] mb-1">
-                  Prix (FCFA) *
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  required
-                  min="0"
-                  step="1"
-                  className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
-                  placeholder="15000"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
-                  Durée (minutes) *
-                </label>
-                <input
-                  type="number"
-                  name="duration_minutes"
-                  value={formData.duration_minutes}
-                  onChange={handleChange}
-                  required
-                  min="1"
-                  className="w-full px-3 py-2 border border-[#3F4A1F]/20 rounded-lg focus:ring-2 focus:ring-[#3F4A1F]/30 focus:border-[#3F4A1F] transition-all text-sm"
-                  placeholder="30"
-                />
-              </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 p-3 rounded-lg border border-[#636B2F]/10">
+            <div className="bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 p-3 rounded-lg border border-[#7a8345]/10">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   name="is_active"
                   checked={formData.is_active}
                   onChange={handleChange}
-                  className="w-4 h-4 rounded border-2 border-[#636B2F]/30 text-[#636B2F] focus:ring-[#636B2F]/30 focus:ring-1"
+                  className="w-4 h-4 rounded border-2 border-[#7a8345]/30 text-[#7a8345] focus:ring-[#7a8345]/30 focus:ring-1"
                 />
                 <span className="text-sm font-semibold text-neutral-700">Examen actif</span>
               </label>
             </div>
             
-            <div className="flex justify-end gap-2 pt-3 border-t border-[#636B2F]/10">
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#7a8345]/10">
               <button
                 type="button"
                 onClick={onClose}
@@ -451,7 +400,7 @@ const ExamModal: React.FC<ExamModalProps> = ({ exam, onClose, onSubmit }) => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                className="px-4 py-2 text-sm bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-lg hover:shadow-lg transition-all font-semibold"
               >
                 {exam ? 'Modifier l\'examen' : 'Créer l\'examen'}
               </button>

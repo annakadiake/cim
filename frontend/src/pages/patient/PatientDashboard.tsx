@@ -61,9 +61,9 @@ export const PatientDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#636B2F]/10 via-[#FFFFFF] to-[#3F4A1F]/10">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#7a8345]/10 via-[#FFFFFF] to-[#5a6332]/10">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-[#636B2F] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-4 border-[#7a8345] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-neutral-600">Chargement de vos données...</p>
         </div>
       </div>
@@ -75,9 +75,9 @@ export const PatientDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#636B2F]/10 via-[#FFFFFF] to-[#3F4A1F]/10">
+    <div className="min-h-screen bg-gradient-to-br from-[#7a8345]/10 via-[#FFFFFF] to-[#5a6332]/10">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] border-b border-[#636B2F]/20 shadow-lg">
+      <header className="bg-gradient-to-r from-[#7a8345] to-[#5a6332] border-b border-[#7a8345]/20 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -91,7 +91,7 @@ export const PatientDashboard: React.FC = () => {
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-                <span className="hidden text-[#636B2F] font-bold text-lg">C</span>
+                <span className="hidden text-[#7a8345] font-bold text-lg">C</span>
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">Portail Patient</h1>
@@ -127,7 +127,7 @@ export const PatientDashboard: React.FC = () => {
           <Card className="overflow-hidden border-0 shadow-xl bg-gradient-to-br from-[#FFFFFF] to-[#FFFFFF]/95">
             <CardContent className="p-8 text-center">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-full flex items-center justify-center shadow-lg">
                   <User className="w-8 h-8 text-white" />
                 </div>
               </div>
@@ -145,7 +145,7 @@ export const PatientDashboard: React.FC = () => {
             <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center shadow-lg">
                     <User className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -164,7 +164,7 @@ export const PatientDashboard: React.FC = () => {
             <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#3F4A1F] to-[#636B2F] rounded-lg flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#5a6332] to-[#7a8345] rounded-lg flex items-center justify-center shadow-lg">
                     <Key className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -186,7 +186,7 @@ export const PatientDashboard: React.FC = () => {
             <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center shadow-lg">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -207,7 +207,7 @@ export const PatientDashboard: React.FC = () => {
           <Card className="border-0 shadow-xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#636B2F]" />
+                <FileText className="w-5 h-5 text-[#7a8345]" />
                 Mes Résultats d'Examens
               </CardTitle>
             </CardHeader>
@@ -215,9 +215,9 @@ export const PatientDashboard: React.FC = () => {
               {reports.length > 0 ? (
                 <div className="space-y-4">
                   {reports.map((report) => (
-                    <div key={report.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-[#FFFFFF] to-[#636B2F]/5 rounded-lg border border-[#636B2F]/20 hover:shadow-md transition-all duration-300">
+                    <div key={report.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-[#FFFFFF] to-[#7a8345]/5 rounded-lg border border-[#7a8345]/20 hover:shadow-md transition-all duration-300">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center shadow-lg">
+                        <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center shadow-lg">
                           <FileText className="w-6 h-6 text-white" />
                         </div>
                         <div>
@@ -274,7 +274,7 @@ export const PatientDashboard: React.FC = () => {
                   <p className="text-neutral-600 mb-4">
                     Vos résultats d'examens apparaîtront ici dès qu'ils seront prêts.
                   </p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 text-[#636B2F] rounded-lg border border-[#636B2F]/20">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 text-[#7a8345] rounded-lg border border-[#7a8345]/20">
                     <Clock className="w-4 h-4" />
                     <span className="text-sm font-medium">En attente de résultats</span>
                   </div>
@@ -284,10 +284,10 @@ export const PatientDashboard: React.FC = () => {
           </Card>
 
           {/* Important Information */}
-          <Card className="border-[#636B2F]/20 bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 shadow-lg">
+          <Card className="border-[#7a8345]/20 bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-start space-x-3">
-                <Shield className="w-6 h-6 text-[#636B2F] mt-1" />
+                <Shield className="w-6 h-6 text-[#7a8345] mt-1" />
                 <div>
                   <h3 className="font-semibold text-neutral-800 mb-2">
                     Informations importantes

@@ -26,7 +26,7 @@ const Invoices: React.FC = () => {
   const canCreate = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
   const canEdit = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
   const canDelete = user?.role === 'superuser' || user?.role === 'admin';
-  const canDownloadPDF = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
+  const canDownloadPDF = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary' || user?.role === 'doctor';
 
   useEffect(() => {
     fetchInvoices();
@@ -167,10 +167,10 @@ const Invoices: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-2xl p-6 border border-[#636B2F]/20">
+      <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-2xl p-6 border border-[#7a8345]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-xl flex items-center justify-center shadow-lg">
               <Receipt className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -181,7 +181,7 @@ const Invoices: React.FC = () => {
           {canCreate && (
             <button
               onClick={handleCreateInvoice}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-medium"
             >
               <Plus className="w-5 h-5" />
               Nouvelle Facture
@@ -191,11 +191,11 @@ const Invoices: React.FC = () => {
       </div>
 
       {/* Filtres */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-6 shadow-lg">
+      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-6 shadow-lg">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#636B2F] w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7a8345] w-5 h-5" />
               <input
                 type="text"
                 placeholder="Rechercher une facture..."
@@ -204,7 +204,7 @@ const Invoices: React.FC = () => {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-12 pr-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                className="w-full pl-12 pr-4 py-3 border-2 border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all duration-300 bg-white/80 backdrop-blur-sm"
               />
             </div>
           </div>
@@ -215,7 +215,7 @@ const Invoices: React.FC = () => {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-3 border-2 border-[#3F4A1F]/20 rounded-xl focus:ring-2 focus:ring-[#3F4A1F]/30 focus:border-[#3F4A1F] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
+            className="px-4 py-3 border-2 border-[#5a6332]/20 rounded-xl focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all duration-300 bg-white/80 backdrop-blur-sm font-medium"
           >
             <option value="">Tous les statuts</option>
             <option value="draft">Brouillon</option>
@@ -230,12 +230,12 @@ const Invoices: React.FC = () => {
       {/* Liste des factures */}
       <div className="space-y-4">
         {loading ? (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-8 text-center shadow-lg">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#636B2F] mx-auto"></div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-8 text-center shadow-lg">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7a8345] mx-auto"></div>
             <p className="mt-2 text-neutral-600">Chargement des factures...</p>
           </div>
         ) : invoices.length === 0 ? (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-8 text-center shadow-lg">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-8 text-center shadow-lg">
             <Receipt className="w-12 h-12 text-neutral-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-neutral-900 mb-2">Aucune facture trouvée</h3>
             <p className="text-neutral-600">
@@ -245,13 +245,13 @@ const Invoices: React.FC = () => {
         ) : (
           <div className="grid gap-4">
             {invoices.map((invoice) => (
-              <Card key={invoice.id} className="bg-white/80 backdrop-blur-sm border-2 border-[#636B2F]/10 hover:border-[#636B2F]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-xl overflow-hidden">
+              <Card key={invoice.id} className="bg-white/80 backdrop-blur-sm border-2 border-[#7a8345]/10 hover:border-[#7a8345]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#636B2F]/20 to-[#3F4A1F]/20 rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#636B2F]" />
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#7a8345]/20 to-[#5a6332]/20 rounded-lg flex items-center justify-center">
+                          <Receipt className="w-5 h-5 text-[#7a8345]" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -260,13 +260,13 @@ const Invoices: React.FC = () => {
                           </div>
                           <div className="grid grid-cols-3 gap-4 text-sm">
                             <div className="flex items-center space-x-2">
-                              <User className="w-4 h-4 text-[#636B2F]" />
+                              <User className="w-4 h-4 text-[#7a8345]" />
                               <span className="font-medium text-neutral-700">
                                 {invoice.patient_details?.full_name || `Patient #${invoice.patient}`}
                               </span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <Calendar className="w-4 h-4 text-[#3F4A1F]" />
+                              <Calendar className="w-4 h-4 text-[#5a6332]" />
                               <span className="text-neutral-700">{formatDate(invoice.invoice_date)}</span>
                             </div>
                             <div className="flex flex-col items-end">
@@ -304,7 +304,7 @@ const Invoices: React.FC = () => {
                       {canEdit && (
                         <button
                           onClick={() => handleEditInvoice(invoice)}
-                          className="p-2 text-[#636B2F] hover:bg-[#636B2F]/10 rounded-lg transition-all duration-300 hover:scale-110"
+                          className="p-2 text-[#7a8345] hover:bg-[#7a8345]/10 rounded-lg transition-all duration-300 hover:scale-110"
                           title="Modifier la facture"
                         >
                           <Edit2 className="w-5 h-5" />
@@ -331,23 +331,23 @@ const Invoices: React.FC = () => {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center">
-          <div className="flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-xl border border-[#636B2F]/20 p-4 shadow-lg">
+          <div className="flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-xl border border-[#7a8345]/20 p-4 shadow-lg">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 text-sm border-2 border-[#636B2F]/20 rounded-lg hover:bg-[#636B2F]/10 hover:border-[#636B2F] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
+              className="px-4 py-2 text-sm border-2 border-[#7a8345]/20 rounded-lg hover:bg-[#7a8345]/10 hover:border-[#7a8345] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
             >
               Précédent
             </button>
             
-            <span className="px-4 py-2 text-sm text-neutral-700 font-medium bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-lg">
+            <span className="px-4 py-2 text-sm text-neutral-700 font-medium bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-lg">
               Page {currentPage} sur {totalPages}
             </span>
             
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 text-sm border-2 border-[#3F4A1F]/20 rounded-lg hover:bg-[#3F4A1F]/10 hover:border-[#3F4A1F] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
+              className="px-4 py-2 text-sm border-2 border-[#5a6332]/20 rounded-lg hover:bg-[#5a6332]/10 hover:border-[#5a6332] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium"
             >
               Suivant
             </button>
@@ -453,13 +453,13 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <div className="bg-white/95 backdrop-blur-sm rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-[#636B2F]/20" onClick={(e) => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 px-5 py-3 rounded-t-xl border-b border-[#636B2F]/20">
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-[#7a8345]/20" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 px-5 py-3 rounded-t-xl border-b border-[#7a8345]/20">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center">
               <Receipt className="w-4 h-4 text-white" />
             </div>
-            <h2 className="text-lg font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent">
               {invoice ? 'Modifier la facture' : 'Nouvelle facture'}
             </h2>
           </div>
@@ -470,7 +470,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
             {/* Informations essentielles */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+                <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                   Patient *
                 </label>
                 <select
@@ -478,7 +478,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                   value={formData.patient}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                  className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                 >
                   <option value={0}>Sélectionner un patient</option>
                   {patients.map(patient => (
@@ -490,7 +490,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
               </div>
               
               <div>
-                <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                   Date de facturation *
                 </label>
                 <input
@@ -499,21 +499,21 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                   value={formData.invoice_date}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-[#3F4A1F]/20 rounded-lg focus:ring-2 focus:ring-[#3F4A1F]/30 focus:border-[#3F4A1F] transition-all text-sm"
+                  className="w-full px-3 py-2 border border-[#5a6332]/20 rounded-lg focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all text-sm"
                 />
               </div>
             </div>
 
             {/* Articles de la facture */}
-            <div className="bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 p-4 rounded-lg border border-[#636B2F]/20">
+            <div className="bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 p-4 rounded-lg border border-[#7a8345]/20">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="text-sm font-bold text-[#3F4A1F]">
+                <h3 className="text-sm font-bold text-[#5a6332]">
                   Articles de la facture
                 </h3>
                 <button
                   type="button"
                   onClick={addItem}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-lg text-xs font-medium"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-lg text-xs font-medium"
                 >
                   <Plus className="w-4 h-4" />
                   Ajouter
@@ -522,16 +522,16 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
               
               <div className="space-y-2">
                 {items.map((item, index) => (
-                  <div key={index} className="bg-white/80 p-3 rounded-lg border border-[#636B2F]/10">
+                  <div key={index} className="bg-white/80 p-3 rounded-lg border border-[#7a8345]/10">
                     <div className="grid grid-cols-12 gap-2 items-end">
                       <div className="col-span-5">
-                        <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+                        <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                           Examen
                         </label>
                         <select
                           value={item.exam_type || 0}
                           onChange={(e) => handleItemChange(index, 'exam_type', Number(e.target.value))}
-                          className="w-full px-2 py-1.5 border border-[#636B2F]/20 rounded text-sm focus:ring-1 focus:ring-[#636B2F]/30"
+                          className="w-full px-2 py-1.5 border border-[#7a8345]/20 rounded text-sm focus:ring-1 focus:ring-[#7a8345]/30"
                         >
                           <option value={0}>Sélectionner un examen</option>
                           {examTypes.map(examType => (
@@ -543,7 +543,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                       </div>
                       
                       <div className="col-span-2">
-                        <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                           Qté
                         </label>
                         <input
@@ -551,12 +551,12 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                           value={item.quantity || 1}
                           onChange={(e) => handleItemChange(index, 'quantity', Number(e.target.value))}
                           min="1"
-                          className="w-full px-2 py-1.5 border border-[#3F4A1F]/20 rounded text-sm focus:ring-1 focus:ring-[#3F4A1F]/30"
+                          className="w-full px-2 py-1.5 border border-[#5a6332]/20 rounded text-sm focus:ring-1 focus:ring-[#5a6332]/30"
                         />
                       </div>
                       
                       <div className="col-span-2">
-                        <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+                        <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                           Prix unit.
                         </label>
                         <input
@@ -564,15 +564,15 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                           value={item.unit_price || 0}
                           onChange={(e) => handleItemChange(index, 'unit_price', Number(e.target.value))}
                           min="0"
-                          className="w-full px-2 py-1.5 border border-[#636B2F]/20 rounded text-sm focus:ring-1 focus:ring-[#636B2F]/30"
+                          className="w-full px-2 py-1.5 border border-[#7a8345]/20 rounded text-sm focus:ring-1 focus:ring-[#7a8345]/30"
                         />
                       </div>
                       
                       <div className="col-span-2">
-                        <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                        <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                           Total
                         </label>
-                        <div className="px-2 py-1.5 bg-[#636B2F]/5 border border-[#3F4A1F]/20 rounded text-sm text-neutral-800 font-semibold">
+                        <div className="px-2 py-1.5 bg-[#7a8345]/5 border border-[#5a6332]/20 rounded text-sm text-neutral-800 font-semibold">
                           {new Intl.NumberFormat('fr-FR').format((item.unit_price || 0) * (item.quantity || 1))}
                         </div>
                       </div>
@@ -593,10 +593,10 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
             </div>
 
             {/* TVA et Total de la facture */}
-            <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 p-3 rounded-lg border border-[#636B2F]/30">
+            <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 p-3 rounded-lg border border-[#7a8345]/30">
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+                  <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                     Taux de TVA (%)
                   </label>
                   <input
@@ -607,12 +607,12 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                     step="0.01"
                     min="0"
                     max="100"
-                    className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                    className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                   />
                 </div>
                 <div className="flex items-end justify-end">
                   <div className="text-right">
-                    <div className="text-sm font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
+                    <div className="text-sm font-bold bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent">
                       Total TTC: {new Intl.NumberFormat('fr-FR').format(total_amount)} FCFA
                     </div>
                     <div className="text-xs text-neutral-600">HT: {new Intl.NumberFormat('fr-FR').format(Math.round(total_amount / (1 + (formData.tax_rate || 18.00) / 100)))} FCFA</div>
@@ -624,7 +624,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
 
             {/* Notes optionnelles */}
             <div>
-              <label className="block text-xs font-semibold text-[#636B2F] mb-1">
+              <label className="block text-xs font-semibold text-[#7a8345] mb-1">
                 Notes
               </label>
               <textarea
@@ -632,12 +632,12 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                 value={formData.notes}
                 onChange={handleChange}
                 rows={2}
-                className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm resize-none"
+                className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm resize-none"
                 placeholder="Informations complémentaires sur la facture..."
               />
             </div>
             
-            <div className="flex justify-end gap-2 pt-3 border-t border-[#636B2F]/20">
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#7a8345]/20">
               <button
                 type="button"
                 onClick={onClose}
@@ -647,7 +647,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-lg hover:shadow-lg transition-all font-medium"
+                className="px-4 py-2 text-sm bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-lg hover:shadow-lg transition-all font-medium"
               >
                 {invoice ? 'Modifier la facture' : 'Créer la facture'}
               </button>

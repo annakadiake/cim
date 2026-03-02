@@ -156,9 +156,9 @@ const Users: React.FC = () => {
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'superuser': return 'bg-red-100 text-red-800';
-      case 'admin': return 'bg-[#636B2F]/10 text-[#3F4A1F]';
-      case 'doctor': return 'bg-[#8FA24A]/15 text-[#3F4A1F]';
-      case 'secretary': return 'bg-[#AFC36D]/20 text-[#3F4A1F]';
+      case 'admin': return 'bg-[#7a8345]/10 text-[#5a6332]';
+      case 'doctor': return 'bg-[#8FA24A]/15 text-[#5a6332]';
+      case 'secretary': return 'bg-[#AFC36D]/20 text-[#5a6332]';
       case 'accountant': return 'bg-amber-100 text-amber-800';
       default: return 'bg-neutral-100 text-neutral-800';
     }
@@ -187,7 +187,7 @@ const Users: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#636B2F]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7a8345]"></div>
       </div>
     );
   }
@@ -195,10 +195,10 @@ const Users: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 rounded-2xl p-6 border border-[#636B2F]/20">
+      <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 rounded-2xl p-6 border border-[#7a8345]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-xl flex items-center justify-center shadow-lg">
               <UsersIcon className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -211,7 +211,7 @@ const Users: React.FC = () => {
               resetForm();
               setShowModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-semibold"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 font-semibold"
           >
             <UserPlus className="h-4 w-4" />
             Nouvel utilisateur
@@ -220,24 +220,24 @@ const Users: React.FC = () => {
       </div>
 
       {/* Barre de recherche et filtres */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#636B2F]/20 p-4">
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#7a8345]/20 p-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 h-4 w-4" />
               <input
                 type="text"
                 placeholder="Rechercher par nom, email, nom d'utilisateur..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border-2 border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all duration-300"
+                className="w-full pl-10 pr-4 py-3 border-2 border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all duration-300"
               />
             </div>
           </div>
           
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-3 border-2 border-[#636B2F]/20 rounded-xl hover:bg-[#636B2F]/5 transition-all duration-300 text-[#3F4A1F] font-medium"
+            className="flex items-center gap-2 px-4 py-3 border-2 border-[#7a8345]/20 rounded-xl hover:bg-[#7a8345]/5 transition-all duration-300 text-[#5a6332] font-medium"
           >
             <Filter className="h-4 w-4" />
             Filtres
@@ -245,16 +245,16 @@ const Users: React.FC = () => {
         </div>
 
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-[#636B2F]/10">
+          <div className="mt-4 pt-4 border-t border-[#7a8345]/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#3F4A1F] mb-1">
+                <label className="block text-sm font-semibold text-[#5a6332] mb-1">
                   Rôle
                 </label>
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#636B2F]/20 rounded-xl focus:ring-2 focus:ring-[#636B2F]/50 focus:border-[#636B2F] bg-white/80 backdrop-blur-sm"
+                  className="w-full px-4 py-3 border border-[#7a8345]/20 rounded-xl focus:ring-2 focus:ring-[#7a8345]/50 focus:border-[#7a8345] bg-white/80 backdrop-blur-sm"
                 >
                   <option value="">Tous les rôles</option>
                   <option value="admin">Administrateur</option>
@@ -268,7 +268,7 @@ const Users: React.FC = () => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-2 px-4 py-2 text-[#636B2F] hover:text-[#3F4A1F] font-medium"
+                className="flex items-center gap-2 px-4 py-2 text-[#7a8345] hover:text-[#5a6332] font-medium"
               >
                 <X className="h-4 w-4" />
                 Effacer les filtres
@@ -279,10 +279,10 @@ const Users: React.FC = () => {
       </div>
 
       {/* Liste des utilisateurs */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#636B2F]/20 overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-[#7a8345]/20 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-[#636B2F]/10">
-            <thead className="bg-gradient-to-r from-[#636B2F] to-[#3F4A1F]">
+          <table className="min-w-full divide-y divide-[#7a8345]/10">
+            <thead className="bg-gradient-to-r from-[#7a8345] to-[#5a6332]">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                   Utilisateur
@@ -304,9 +304,9 @@ const Users: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-[#636B2F]/10">
+            <tbody className="bg-white divide-y divide-[#7a8345]/10">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-[#636B2F]/5 transition-colors duration-200">
+                <tr key={user.id} className="hover:bg-[#7a8345]/5 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-semibold text-neutral-800">
@@ -345,7 +345,7 @@ const Users: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(user)}
-                        className="text-[#636B2F] hover:text-[#3F4A1F] p-1 hover:bg-[#636B2F]/10 rounded-lg transition-all duration-200"
+                        className="text-[#7a8345] hover:text-[#5a6332] p-1 hover:bg-[#7a8345]/10 rounded-lg transition-all duration-200"
                         title="Modifier"
                       >
                         <Edit className="h-4 w-4" />
@@ -371,13 +371,13 @@ const Users: React.FC = () => {
       {/* Modal de création/édition */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl w-full max-w-md shadow-2xl border border-[#636B2F]/20 overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="bg-gradient-to-r from-[#636B2F]/10 to-[#3F4A1F]/10 px-5 py-3 border-b border-[#636B2F]/20">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl w-full max-w-md shadow-2xl border border-[#7a8345]/20 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 px-5 py-3 border-b border-[#7a8345]/20">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center">
                   <UsersIcon className="w-4 h-4 text-white" />
                 </div>
-                <h3 className="text-lg font-bold bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] bg-clip-text text-transparent">
+                <h3 className="text-lg font-bold bg-gradient-to-r from-[#7a8345] to-[#5a6332] bg-clip-text text-transparent">
                   {editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur'}
                 </h3>
               </div>
@@ -388,20 +388,20 @@ const Users: React.FC = () => {
               {editingUser?.role === 'superuser' ? (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                       Nom d'utilisateur
                     </label>
                     <input
                       type="text"
                       value={formData.username}
                       onChange={(e) => setFormData({...formData, username: e.target.value})}
-                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                       Nouveau mot de passe
                     </label>
                     <div className="relative">
@@ -409,13 +409,13 @@ const Users: React.FC = () => {
                         type={showPassword ? 'text' : 'password'}
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
-                        className="w-full px-3 py-2 pr-10 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        className="w-full px-3 py-2 pr-10 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                         placeholder="Laisser vide pour ne pas changer"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 hover:text-[#636B2F]"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 hover:text-[#7a8345]"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -426,60 +426,60 @@ const Users: React.FC = () => {
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                         Prénom
                       </label>
                       <input
                         type="text"
                         value={formData.first_name}
                         onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                         Nom
                       </label>
                       <input
                         type="text"
                         value={formData.last_name}
                         onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                       Nom d'utilisateur
                     </label>
                     <input
                       type="text"
                       value={formData.username}
                       onChange={(e) => setFormData({...formData, username: e.target.value})}
-                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                       Email
                     </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                      className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                       required
                     />
                   </div>
 
                   {!editingUser && (
                     <div>
-                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                         Mot de passe
                       </label>
                       <div className="relative">
@@ -487,13 +487,13 @@ const Users: React.FC = () => {
                           type={showPassword ? 'text' : 'password'}
                           value={formData.password}
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="w-full px-3 py-2 pr-10 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                          className="w-full px-3 py-2 pr-10 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                           required
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#636B2F]/50 hover:text-[#636B2F]"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 hover:text-[#7a8345]"
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -503,13 +503,13 @@ const Users: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                         Rôle
                       </label>
                       <select
                         value={formData.role}
                         onChange={(e) => setFormData({...formData, role: e.target.value as 'superuser' | 'admin' | 'doctor' | 'secretary' | 'accountant'})}
-                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                         required
                       >
                         <option value="secretary">Secrétaire</option>
@@ -519,14 +519,14 @@ const Users: React.FC = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#3F4A1F] mb-1">
+                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
                         Département
                       </label>
                       <input
                         type="text"
                         value={formData.department}
                         onChange={(e) => setFormData({...formData, department: e.target.value})}
-                        className="w-full px-3 py-2 border border-[#636B2F]/20 rounded-lg focus:ring-2 focus:ring-[#636B2F]/30 focus:border-[#636B2F] transition-all text-sm"
+                        className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                       />
                     </div>
                   </div>
@@ -537,7 +537,7 @@ const Users: React.FC = () => {
                       id="is_active"
                       checked={formData.is_active}
                       onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                      className="w-4 h-4 rounded border border-[#636B2F]/30 text-[#636B2F] focus:ring-[#636B2F]/30 focus:ring-1"
+                      className="w-4 h-4 rounded border border-[#7a8345]/30 text-[#7a8345] focus:ring-[#7a8345]/30 focus:ring-1"
                     />
                     <label htmlFor="is_active" className="ml-2 block text-sm font-semibold text-neutral-700">
                       Compte actif
@@ -554,13 +554,13 @@ const Users: React.FC = () => {
                     setEditingUser(null);
                     resetForm();
                   }}
-                  className="px-4 py-2 text-sm border border-[#636B2F]/20 rounded-lg text-[#3F4A1F] hover:bg-[#636B2F]/5 font-medium transition-all"
+                  className="px-4 py-2 text-sm border border-[#7a8345]/20 rounded-lg text-[#5a6332] hover:bg-[#7a8345]/5 font-medium transition-all"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                  className="px-4 py-2 text-sm bg-gradient-to-r from-[#7a8345] to-[#5a6332] text-white rounded-lg hover:shadow-lg transition-all font-semibold"
                 >
                   {editingUser ? 'Modifier' : 'Créer'}
                 </button>

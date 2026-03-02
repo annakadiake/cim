@@ -170,7 +170,7 @@ class ApiClient {
   }
 
   async updateInvoice(id: number, invoice: Partial<Invoice>): Promise<Invoice> {
-    const response = await this.client.put<Invoice>(`/invoices/${id}/`, invoice);
+    const response = await this.client.patch<Invoice>(`/invoices/${id}/`, invoice);
     return response.data;
   }
 
@@ -202,7 +202,7 @@ class ApiClient {
   }
 
   async updatePayment(id: number, payment: Partial<Payment>): Promise<Payment> {
-    const response = await this.client.put<Payment>(`/payments/${id}/`, payment);
+    const response = await this.client.patch<Payment>(`/payments/${id}/`, payment);
     return response.data;
   }
 

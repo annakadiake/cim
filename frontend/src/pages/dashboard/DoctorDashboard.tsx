@@ -61,7 +61,7 @@ export const DoctorDashboard: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#636B2F] to-[#3F4A1F] rounded-2xl p-5 text-white shadow-lg">
+      <div className="bg-gradient-to-r from-[#7a8345] to-[#5a6332] rounded-2xl p-5 text-white shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -83,20 +83,20 @@ export const DoctorDashboard: React.FC = () => {
 
       {/* Cartes statistiques */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div onClick={() => navigate('/patients')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+        <div onClick={() => navigate('/patients')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#636B2F]/10 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-[#636B2F]" />
+            <div className="w-10 h-10 bg-[#7a8345]/10 rounded-lg flex items-center justify-center">
+              <Users className="w-5 h-5 text-[#7a8345]" />
             </div>
             <div>
               <p className="text-xs text-neutral-500">Patients</p>
               <p className="text-xl font-bold text-neutral-800">{s.total_patients}</p>
             </div>
           </div>
-          <p className="text-xs text-[#636B2F] mt-2">+{s.patients_this_month} ce mois</p>
+          <p className="text-xs text-[#7a8345] mt-2">+{s.patients_this_month} ce mois</p>
         </div>
 
-        <div onClick={() => navigate('/reports')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+        <div onClick={() => navigate('/reports')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
               <ClipboardList className="w-5 h-5 text-green-600" />
@@ -109,7 +109,7 @@ export const DoctorDashboard: React.FC = () => {
           <p className="text-xs text-green-600 mt-2">+{s.reports_this_month} ce mois</p>
         </div>
 
-        <div onClick={() => navigate('/exams')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+        <div onClick={() => navigate('/exams')} className="cursor-pointer bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
               <Stethoscope className="w-5 h-5 text-purple-600" />
@@ -122,7 +122,7 @@ export const DoctorDashboard: React.FC = () => {
           <p className="text-xs text-purple-600 mt-2">examens actifs</p>
         </div>
 
-        <div className="bg-gradient-to-br from-[#636B2F] to-[#3F4A1F] rounded-xl p-4 shadow-md text-white">
+        <div className="bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-xl p-4 shadow-md text-white">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
               <FileText className="w-5 h-5" />
@@ -139,13 +139,13 @@ export const DoctorDashboard: React.FC = () => {
       {/* Tableaux récents */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Derniers comptes rendus */}
-        <div className="bg-white rounded-xl shadow-md border border-[#636B2F]/10 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 border-b border-[#636B2F]/10">
+        <div className="bg-white rounded-xl shadow-md border border-[#7a8345]/10 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 border-b border-[#7a8345]/10">
             <h3 className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
               <ClipboardList className="w-4 h-4 text-green-600" />
               Derniers Comptes Rendus
             </h3>
-            <button onClick={() => navigate('/reports')} className="text-xs text-[#636B2F] hover:underline flex items-center gap-1">
+            <button onClick={() => navigate('/reports')} className="text-xs text-[#7a8345] hover:underline flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </button>
           </div>
@@ -174,13 +174,13 @@ export const DoctorDashboard: React.FC = () => {
         </div>
 
         {/* Derniers patients */}
-        <div className="bg-white rounded-xl shadow-md border border-[#636B2F]/10 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#636B2F]/5 to-[#3F4A1F]/5 border-b border-[#636B2F]/10">
+        <div className="bg-white rounded-xl shadow-md border border-[#7a8345]/10 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#7a8345]/5 to-[#5a6332]/5 border-b border-[#7a8345]/10">
             <h3 className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#636B2F]" />
+              <Users className="w-4 h-4 text-[#7a8345]" />
               Derniers Patients
             </h3>
-            <button onClick={() => navigate('/patients')} className="text-xs text-[#636B2F] hover:underline flex items-center gap-1">
+            <button onClick={() => navigate('/patients')} className="text-xs text-[#7a8345] hover:underline flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </button>
           </div>
@@ -191,8 +191,8 @@ export const DoctorDashboard: React.FC = () => {
               s.recent_patients.map((p: any) => (
                 <div key={p.id} className="px-4 py-2.5 flex items-center justify-between hover:bg-neutral-50 transition-colors">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-[#636B2F]/10 rounded-full flex items-center justify-center">
-                      <span className="text-[#636B2F] font-semibold text-xs">
+                    <div className="w-8 h-8 bg-[#7a8345]/10 rounded-full flex items-center justify-center">
+                      <span className="text-[#7a8345] font-semibold text-xs">
                         {p.first_name?.charAt(0)}{p.last_name?.charAt(0)}
                       </span>
                     </div>
@@ -213,17 +213,17 @@ export const DoctorDashboard: React.FC = () => {
 
       {/* Raccourcis */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <button onClick={() => navigate('/reports')} className="bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
+        <button onClick={() => navigate('/reports')} className="bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
           <ClipboardList className="w-5 h-5 text-green-600 mb-2" />
           <p className="text-sm font-semibold text-neutral-800">Comptes Rendus</p>
           <p className="text-xs text-neutral-400">Uploader un rapport</p>
         </button>
-        <button onClick={() => navigate('/patients')} className="bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
-          <Users className="w-5 h-5 text-[#636B2F] mb-2" />
+        <button onClick={() => navigate('/patients')} className="bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
+          <Users className="w-5 h-5 text-[#7a8345] mb-2" />
           <p className="text-sm font-semibold text-neutral-800">Patients</p>
           <p className="text-xs text-neutral-400">Consulter les dossiers</p>
         </button>
-        <button onClick={() => navigate('/exams')} className="bg-white rounded-xl p-4 shadow-md border border-[#636B2F]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
+        <button onClick={() => navigate('/exams')} className="bg-white rounded-xl p-4 shadow-md border border-[#7a8345]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all text-left">
           <Stethoscope className="w-5 h-5 text-purple-600 mb-2" />
           <p className="text-sm font-semibold text-neutral-800">Examens</p>
           <p className="text-xs text-neutral-400">Types d'examens</p>
