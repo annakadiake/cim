@@ -21,7 +21,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user } = useAuth();
-  const isAdmin = user?.role === 'superuser' || user?.role === 'admin';
+  const isAdmin = ['superuser', 'admin'].includes(user?.role || '');
 
   const [notifications, setNotifications] = useState<LoginNotif[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -40,8 +40,9 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   };
 
   useEffect(() => {
+    if (!isAdmin) return;
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
+    const interval = setInterval(fetchNotifications, 60000);
     return () => clearInterval(interval);
   }, [isAdmin]);
 
