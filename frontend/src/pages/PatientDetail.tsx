@@ -168,7 +168,13 @@ const PatientDetail: React.FC = () => {
     }
   };
 
-  const handleDownloadPDF = async (invoiceId: number) => {
+  const handleDownloadPDF = async (invoiceId: number, invoiceStatus: string) => {
+    // Vérifier si la facture est payée
+    if (invoiceStatus !== 'paid') {
+      toast.error('Le téléchargement PDF n\'est disponible que pour les factures payées');
+      return;
+    }
+    
     try {
       const blob = await api.downloadInvoicePDF(invoiceId);
       const url = window.URL.createObjectURL(blob);
@@ -431,9 +437,13 @@ const PatientDetail: React.FC = () => {
                     </div>
                     <div className="flex gap-1">
                       <button
-                        onClick={() => handleDownloadPDF(invoice.id)}
-                        className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Télécharger PDF"
+                        onClick={() => handleDownloadPDF(invoice.id, invoice.status)}
+                        className={`p-2 rounded-lg transition-colors ${
+                          invoice.status === 'paid' 
+                            ? 'text-blue-500 hover:bg-blue-50' 
+                            : 'text-neutral-300 cursor-not-allowed'
+                        }`}
+                        title={invoice.status === 'paid' ? 'Télécharger PDF' : 'Téléchargement disponible après paiement'}
                       >
                         <Download className="w-4 h-4" />
                       </button>

@@ -178,12 +178,12 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     def download_pdf(self, request, pk=None):
         invoice = self.get_object()
         
-        # Permettre le téléchargement pour toutes les factures (pas seulement payées)
-        # if invoice.status != 'paid':
-        #     return Response(
-        #         {'error': 'Le téléchargement PDF n\'est disponible que pour les factures payées.'},
-        #         status=status.HTTP_400_BAD_REQUEST
-        #     )
+        # Vérifier que la facture est payée avant d'autoriser le téléchargement
+        if invoice.status != 'paid':
+            return Response(
+                {'error': 'Le téléchargement PDF n\'est disponible que pour les factures payées.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
         # Récupérer ou créer les clés d'accès patient
         patient_access_keys = None
