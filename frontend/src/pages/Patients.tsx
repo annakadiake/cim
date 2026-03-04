@@ -21,74 +21,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ui/ConfirmDialog';
 
-// Données de patients initiaux pour les tests
-const initialPatients: Patient[] = [
-  {
-    id: 1,
-    first_name: 'Aminata',
-    last_name: 'Diallo',
-    phone_number: '+221 77 123 45 67',
-    email: 'aminata.diallo@email.com',
-    gender: 'F',
-    address: 'Dakar, Sénégal',
-    age: 34,
-    full_name: 'Aminata Diallo',
-    created_at: '2024-01-15T10:30:00Z',
-    updated_at: '2024-01-15T10:30:00Z'
-  },
-  {
-    id: 2,
-    first_name: 'Moussa',
-    last_name: 'Ba',
-    phone_number: '+221 78 987 65 43',
-    email: 'moussa.ba@email.com',
-    gender: 'M',
-    address: 'Thiès, Sénégal',
-    age: 39,
-    full_name: 'Moussa Ba',
-    created_at: '2024-01-16T14:20:00Z',
-    updated_at: '2024-01-16T14:20:00Z'
-  },
-  {
-    id: 3,
-    first_name: 'Fatou',
-    last_name: 'Ndiaye',
-    phone_number: '+221 76 555 44 33',
-    email: 'fatou.ndiaye@email.com',
-    gender: 'F',
-    address: 'Saint-Louis, Sénégal',
-    age: 32,
-    full_name: 'Fatou Ndiaye',
-    created_at: '2024-01-17T09:15:00Z',
-    updated_at: '2024-01-17T09:15:00Z'
-  },
-  {
-    id: 4,
-    first_name: 'Ibrahima',
-    last_name: 'Sarr',
-    phone_number: '+221 77 666 77 88',
-    email: 'ibrahima.sarr@email.com',
-    gender: 'M',
-    address: 'Kaolack, Sénégal',
-    age: 36,
-    full_name: 'Ibrahima Sarr',
-    created_at: '2024-01-18T16:45:00Z',
-    updated_at: '2024-01-18T16:45:00Z'
-  },
-  {
-    id: 5,
-    first_name: 'Aïssatou',
-    last_name: 'Fall',
-    phone_number: '+221 78 111 22 33',
-    email: 'aissatou.fall@email.com',
-    gender: 'F',
-    address: 'Ziguinchor, Sénégal',
-    age: 29,
-    full_name: 'Aïssatou Fall',
-    created_at: '2024-01-19T11:30:00Z',
-    updated_at: '2024-01-19T11:30:00Z'
-  }
-];
 
 export const Patients: React.FC = () => {
   const { user } = useAuth();
@@ -126,19 +58,9 @@ export const Patients: React.FC = () => {
       setTotalPages(Math.ceil(response.count / 20)); // Assuming 20 per page
     } catch (error) {
       console.error('Erreur lors du chargement des patients:', error);
-      // En cas d'erreur API, utiliser les données de test
-      let filteredPatients = initialPatients;
-      
-      if (searchTerm) {
-        filteredPatients = initialPatients.filter(patient =>
-          patient.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          patient.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          patient.phone_number.includes(searchTerm)
-        );
-      }
-      
-      setPatients(filteredPatients);
-      setTotalPages(1);
+      toast.error('Erreur lors du chargement des patients');
+      setPatients([]);
+      setTotalPages(0);
     } finally {
       setLoading(false);
     }
