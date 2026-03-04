@@ -22,18 +22,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise serializers.ValidationError("Ce compte est désactivé. Veuillez contacter l'administrateur.")
         
         # Créer une notification de connexion (ne doit jamais bloquer le login)
-        try:
-            from .models import LoginNotification
-            request = self.context.get('request')
-            ip_address = None
-            if request:
-                ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
-            LoginNotification.objects.create(
-                user=self.user,
-                ip_address=ip_address,
-            )
-        except Exception:
-            pass
+        # Pas de notification pour les superusers
+        if not self.user.is_superuser:
+            try:
+                from .models import LoginNotification
+                request = self.context.get('request')
+                ip_address = None
+                if request:
+                    ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR')
+                LoginNotification.objects.create(
+                    user=self.user,
+                    ip_address=ip_address,
+                )
+            except Exception:
+                pass
         
         # Informations utilisateur avec rôle
         data['user'] = {
