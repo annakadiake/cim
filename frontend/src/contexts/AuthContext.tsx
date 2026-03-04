@@ -82,7 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       doctor: [
         'patients', 'patients_create', 'patients_edit',
         'exams',
-        'invoices',
         'reports', 'reports_create', 'reports_edit',
       ],
       secretary: [
