@@ -24,7 +24,7 @@ const Invoices: React.FC = () => {
 
   // Permissions
   const canCreate = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
-  const canEdit = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary';
+  const canEdit = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant';
   const canDelete = user?.role === 'superuser' || user?.role === 'admin';
   const canDownloadPDF = user?.role === 'superuser' || user?.role === 'admin' || user?.role === 'accountant' || user?.role === 'secretary' || user?.role === 'doctor';
 
