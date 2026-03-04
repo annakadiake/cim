@@ -12,6 +12,7 @@ class Patient(models.Model):
         ('F', 'Féminin'),
     ]
     
+    patient_id = models.CharField(max_length=6, unique=True, editable=False, default='TEMP', verbose_name="ID Patient")
     first_name = models.CharField(max_length=100, verbose_name="Prénom")
     last_name = models.CharField(max_length=100, verbose_name="Nom")
     age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Âge")
@@ -34,6 +35,7 @@ class Patient(models.Model):
         verbose_name = "Patient"
         verbose_name_plural = "Patients"
         indexes = [
+            models.Index(fields=['patient_id']),
             models.Index(fields=['first_name', 'last_name']),
             models.Index(fields=['phone_number']),
             models.Index(fields=['email']),
@@ -47,6 +49,24 @@ class Patient(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+    
+    @staticmethod
+    def generate_patient_id():
+        """Génère un ID patient alphanumérique unique de 6 caractères"""
+        while True:
+            # Génère 6 caractères alphanumériques (lettres majuscules + chiffres)
+            chars = string.ascii_uppercase + string.digits
+            patient_id = ''.join(secrets.choice(chars) for _ in range(6))
+            
+            # Vérifie que l'ID n'existe pas déjà
+            if not Patient.objects.filter(patient_id=patient_id).exists():
+                return patient_id
+    
+    def save(self, *args, **kwargs):
+        """Génère automatiquement un patient_id si non défini"""
+        if not self.patient_id:
+            self.patient_id = Patient.generate_patient_id()
+        super().save(*args, **kwargs)
 
 
 class PatientAccess(models.Model):
