@@ -205,7 +205,7 @@ export const Patients: React.FC = () => {
                           {patient.first_name} {patient.last_name}
                         </h3>
                         <Badge variant="default" size="sm">
-                          ID: {patient.id}
+                          ID: {patient.patient_id}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-4 mt-1 text-sm text-neutral-600">

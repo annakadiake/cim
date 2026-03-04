@@ -240,7 +240,7 @@ const PatientDetail: React.FC = () => {
           <h1 className="text-2xl font-bold text-neutral-800">
             {patient.first_name} {patient.last_name}
           </h1>
-          <p className="text-sm text-neutral-500">Fiche patient #{patient.id}</p>
+          <p className="text-sm text-neutral-500">ID Patient: {patient.patient_id}</p>
         </div>
       </div>
 
