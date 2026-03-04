@@ -77,16 +77,7 @@ const PatientDetail: React.FC = () => {
     }
   };
 
-  const getAge = (dob: string) => {
-    if (!dob) return '';
-    const today = new Date();
-    const birth = new Date(dob);
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-    return `${age} ans`;
-  };
-
+  
   const handleCreateInvoice = async (e: React.FormEvent) => {
     e.preventDefault();
     const validItems = invoiceItems.filter(i => i.exam_type > 0);
@@ -260,10 +251,10 @@ const PatientDetail: React.FC = () => {
               <span className="text-neutral-700">{patient.email}</span>
             </div>
           )}
-          {patient.date_of_birth && (
+          {patient.age && (
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="w-4 h-4 text-neutral-400" />
-              <span className="text-neutral-700">{getAge(patient.date_of_birth)}</span>
+              <span className="text-neutral-700">{patient.age} ans</span>
             </div>
           )}
           {patient.address && (
