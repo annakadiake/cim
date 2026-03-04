@@ -91,10 +91,8 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     patient_title = Paragraph('<b>INFORMATIONS PATIENT</b>', header_style)
     content.append(patient_title)
     
-    # Calculer l'âge du patient
-    today = date.today()
-    dob = invoice.patient.date_of_birth
-    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    # Utiliser l'âge directement du patient
+    age = invoice.patient.age or 0
     
     patient_data = [
         ['Nom:', invoice.patient.full_name],
