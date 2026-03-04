@@ -29,7 +29,7 @@ export interface Patient {
   id: number;
   first_name: string;
   last_name: string;
-  date_of_birth: string;
+  age?: number;
   gender: 'M' | 'F';
   phone_number: string;
   email?: string;

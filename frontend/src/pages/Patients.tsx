@@ -31,7 +31,7 @@ const initialPatients: Patient[] = [
     email: 'aminata.diallo@email.com',
     gender: 'F',
     address: 'Dakar, Sénégal',
-    date_of_birth: '1990-05-15',
+    age: 34,
     full_name: 'Aminata Diallo',
     created_at: '2024-01-15T10:30:00Z',
     updated_at: '2024-01-15T10:30:00Z'
@@ -44,7 +44,7 @@ const initialPatients: Patient[] = [
     email: 'moussa.ba@email.com',
     gender: 'M',
     address: 'Thiès, Sénégal',
-    date_of_birth: '1985-12-03',
+    age: 39,
     full_name: 'Moussa Ba',
     created_at: '2024-01-16T14:20:00Z',
     updated_at: '2024-01-16T14:20:00Z'
@@ -57,7 +57,7 @@ const initialPatients: Patient[] = [
     email: 'fatou.ndiaye@email.com',
     gender: 'F',
     address: 'Saint-Louis, Sénégal',
-    date_of_birth: '1992-08-22',
+    age: 32,
     full_name: 'Fatou Ndiaye',
     created_at: '2024-01-17T09:15:00Z',
     updated_at: '2024-01-17T09:15:00Z'
@@ -70,7 +70,7 @@ const initialPatients: Patient[] = [
     email: 'ibrahima.sarr@email.com',
     gender: 'M',
     address: 'Kaolack, Sénégal',
-    date_of_birth: '1988-03-10',
+    age: 36,
     full_name: 'Ibrahima Sarr',
     created_at: '2024-01-18T16:45:00Z',
     updated_at: '2024-01-18T16:45:00Z'
@@ -83,7 +83,7 @@ const initialPatients: Patient[] = [
     email: 'aissatou.fall@email.com',
     gender: 'F',
     address: 'Ziguinchor, Sénégal',
-    date_of_birth: '1995-11-07',
+    age: 29,
     full_name: 'Aïssatou Fall',
     created_at: '2024-01-19T11:30:00Z',
     updated_at: '2024-01-19T11:30:00Z'
@@ -418,13 +418,18 @@ const PatientModal: React.FC<PatientModalProps> = ({ patient, onClose, onSubmit 
     phone_number: patient?.phone_number || '',
     email: patient?.email || '',
     address: patient?.address || '',
-    date_of_birth: patient?.date_of_birth || '',
+    age: patient?.age || '',
     gender: patient?.gender || 'M',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Convert age to number if provided
+    const submitData = {
+      ...formData,
+      age: formData.age ? parseInt(formData.age.toString()) : undefined
+    };
+    onSubmit(submitData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -511,14 +516,17 @@ const PatientModal: React.FC<PatientModalProps> = ({ patient, onClose, onSubmit 
             
             <div>
               <label className="block text-xs font-semibold text-neutral-800 mb-1">
-                Date de Naissance
+                Âge
               </label>
               <input
-                type="date"
-                name="date_of_birth"
-                value={formData.date_of_birth}
+                type="number"
+                name="age"
+                value={formData.age || ''}
                 onChange={handleChange}
+                min="0"
+                max="150"
                 className="w-full px-3 py-2 border border-[#5a6332]/20 rounded-lg focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all text-sm"
+                placeholder="Ex: 25"
               />
             </div>
             

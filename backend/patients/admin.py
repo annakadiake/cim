@@ -4,7 +4,7 @@ from core.admin_search import AdvancedSearchMixin, BulkActionsMixin, SearchStats
 
 @admin.register(Patient)
 class PatientAdmin(AdvancedSearchMixin, BulkActionsMixin, SearchStatsAdmin, admin.ModelAdmin):
-    list_display = ['full_name', 'phone_number', 'gender', 'date_of_birth', 'created_at']
+    list_display = ['full_name', 'phone_number', 'gender', 'age', 'created_at']
     list_filter = ['gender', 'created_at']
     search_fields = ['first_name', 'last_name', 'phone_number', 'email', 'address']
     readonly_fields = ['created_at', 'updated_at']

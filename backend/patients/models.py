@@ -14,7 +14,7 @@ class Patient(models.Model):
     
     first_name = models.CharField(max_length=100, verbose_name="Prénom")
     last_name = models.CharField(max_length=100, verbose_name="Nom")
-    date_of_birth = models.DateField(verbose_name="Date de naissance")
+    age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Âge")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name="Sexe")
     
     phone_regex = RegexValidator(
@@ -38,7 +38,7 @@ class Patient(models.Model):
             models.Index(fields=['phone_number']),
             models.Index(fields=['email']),
             models.Index(fields=['created_at']),
-            models.Index(fields=['date_of_birth']),
+            models.Index(fields=['age']),
         ]
     
     def __str__(self):

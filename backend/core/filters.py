@@ -80,7 +80,7 @@ class InvoiceFilter(django_filters.FilterSet):
     
     class Meta:
         model = Invoice
-        fields = ['status', 'patient_name', 'amount_min', 'amount_max', 'date_from', 'date_to', 'payment_status']
+        fields = ['status', 'patient', 'patient_name', 'amount_min', 'amount_max', 'date_from', 'date_to', 'payment_status']
     
     def filter_by_status(self, queryset, name, value):
         """Filtre par statut avec support des valeurs multiples séparées par des virgules"""
@@ -114,9 +114,12 @@ class PaymentFilter(django_filters.FilterSet):
     # Recherche par patient via facture
     patient_name = django_filters.CharFilter(method='filter_by_patient_name', label='Nom patient')
     
+    # Filtre par patient (via facture)
+    patient = django_filters.NumberFilter(method='filter_by_patient', label='Patient')
+    
     class Meta:
         model = Payment
-        fields = ['payment_method', 'amount_min', 'amount_max', 'date_from', 'date_to', 'reference', 'patient_name']
+        fields = ['payment_method', 'invoice', 'amount_min', 'amount_max', 'date_from', 'date_to', 'reference', 'patient_name']
     
     def filter_by_patient_name(self, queryset, name, value):
         """Recherche par nom de patient via la facture"""
@@ -124,6 +127,10 @@ class PaymentFilter(django_filters.FilterSet):
             models.Q(invoice__patient__first_name__icontains=value) |
             models.Q(invoice__patient__last_name__icontains=value)
         )
+    
+    def filter_by_patient(self, queryset, name, value):
+        """Filtre par patient via la facture"""
+        return queryset.filter(invoice__patient_id=value)
 
 
 class ExamTypeFilter(django_filters.FilterSet):
