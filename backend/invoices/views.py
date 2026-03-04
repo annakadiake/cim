@@ -188,6 +188,9 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         # Récupérer ou créer les clés d'accès patient
         patient_access_keys = None
         try:
+            # Importer PatientAccess dynamiquement pour éviter les erreurs
+            from patients.models import PatientAccess
+            
             # Chercher une clé d'accès active existante
             patient_access = PatientAccess.objects.filter(
                 patient=invoice.patient,
@@ -209,17 +212,28 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             
             print(f"DEBUG: Clés d'accès générées: {patient_access_keys}")
             
+        except ImportError:
+            # Le modèle PatientAccess n'existe pas
+            print("PatientAccess model non trouvé, génération PDF sans clés d'accès")
+            patient_access_keys = None
         except Exception as e:
-            # En cas d'erreur, continuer sans les clés (pour debug)
+            # Autre erreur (champ manquant, etc.)
             print(f"Erreur lors de la récupération des clés d'accès: {e}")
             patient_access_keys = None
         
         # Générer le PDF avec les clés d'accès
-        pdf_content = generate_pdf_invoice(invoice, patient_access_keys)
-        
-        response = HttpResponse(pdf_content, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="facture_{invoice.invoice_number}_avec_cles.pdf"'
-        return response
+        try:
+            pdf_content = generate_pdf_invoice(invoice, patient_access_keys)
+            
+            response = HttpResponse(pdf_content, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="facture_{invoice.invoice_number}.pdf"'
+            return response
+        except Exception as e:
+            print(f"Erreur lors de la génération du PDF: {e}")
+            return Response(
+                {'error': 'Erreur lors de la génération du PDF. Veuillez contacter l\'administrateur.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     @action(detail=False, methods=['get'])
     def unpaid(self, request):
