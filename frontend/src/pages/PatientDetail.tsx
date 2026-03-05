@@ -5,7 +5,7 @@ import {
   FileText, Plus, CreditCard, Download, Coins, ClipboardList, Upload, Trash2
 } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Patient, Invoice, Payment, ExamType, PatientReport } from '@/types';
+import { Patient, Invoice, Payment, PatientReport } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ui/ConfirmDialog';
@@ -20,7 +20,6 @@ const PatientDetail: React.FC = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [examTypes, setExamTypes] = useState<ExamType[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'invoices' | 'payments' | 'reports'>('invoices');
   const [reports, setReports] = useState<PatientReport[]>([]);
@@ -59,17 +58,15 @@ const PatientDetail: React.FC = () => {
   const fetchAll = async () => {
     try {
       setLoading(true);
-      const [patientRes, invoicesRes, paymentsRes, examsRes, reportsRes] = await Promise.all([
+      const [patientRes, invoicesRes, paymentsRes, reportsRes] = await Promise.all([
         api.getPatient(Number(id)),
         api.getInvoices({ patient: Number(id), page_size: 100 }),
         api.getPayments({ patient: Number(id), page_size: 100 }),
-        api.getExamTypes({ page_size: 100 }),
         api.getPatientReports({ patient_id: Number(id) }).catch(() => ({ results: [] })),
       ]);
       setPatient(patientRes);
       setInvoices(invoicesRes.results || []);
       setPayments(paymentsRes.results || []);
-      setExamTypes(examsRes.results || []);
       setReports(reportsRes.results || reportsRes || []);
     } catch (error) {
       console.error('Erreur chargement détails patient:', error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Receipt, Search, Plus, Edit2, Trash2, Download, Calendar, User } from 'lucide-react';
-import { Invoice, Patient, ExamType, InvoiceItem } from '@/types';
+import { Invoice, Patient, InvoiceItem } from '@/types';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -13,7 +13,6 @@ const Invoices: React.FC = () => {
   const { confirm } = useConfirm();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [examTypes, setExamTypes] = useState<ExamType[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -31,7 +30,6 @@ const Invoices: React.FC = () => {
   useEffect(() => {
     fetchInvoices();
     fetchPatients();
-    fetchExamTypes();
   }, [currentPage, searchTerm, statusFilter]);
 
   const fetchInvoices = async () => {
@@ -62,14 +60,6 @@ const Invoices: React.FC = () => {
     }
   };
 
-  const fetchExamTypes = async () => {
-    try {
-      const response = await api.getExamTypes({ page_size: 1000, is_active: true });
-      setExamTypes(response.results);
-    } catch (error) {
-      console.error('Erreur lors du chargement des types d\'examens:', error);
-    }
-  };
 
   const handleCreateInvoice = () => {
     setEditingInvoice(null);
@@ -360,7 +350,6 @@ const Invoices: React.FC = () => {
         <InvoiceModal
           invoice={editingInvoice}
           patients={patients}
-          examTypes={examTypes}
           onClose={() => setShowModal(false)}
           onSubmit={handleSubmitInvoice}
         />
@@ -372,12 +361,11 @@ const Invoices: React.FC = () => {
 interface InvoiceModalProps {
   invoice: Invoice | null;
   patients: Patient[];
-  examTypes: ExamType[];
   onClose: () => void;
   onSubmit: (invoiceData: Partial<Invoice>) => void;
 }
 
-const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examTypes, onClose, onSubmit }) => {
+const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     patient: invoice?.patient || 0,
     invoice_date: invoice?.invoice_date || new Date().toISOString().split('T')[0],
