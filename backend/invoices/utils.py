@@ -152,12 +152,33 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     content.append(items_table)
     content.append(Spacer(1, 1*cm))
     
+    # Récupérer la prise en charge depuis les paiements
+    coverage = 0
+    coverage_name = ''
+    try:
+        last_payment = invoice.payments.filter(status='completed', coverage_percentage__gt=0).order_by('-created_at').first()
+        if last_payment:
+            coverage = float(last_payment.coverage_percentage)
+            coverage_name = last_payment.coverage_name or ''
+    except Exception:
+        pass
+    
+    coverage_amount = int(float(invoice.total_amount) * coverage / 100) if coverage > 0 else 0
+    patient_amount = int(float(invoice.total_amount)) - coverage_amount
+    
     # Totals (TVA incluse dans le prix)
     totals_data = [
         ['Montant HT:', f'{int(invoice.subtotal):,} FCFA'],
         [f'TVA ({invoice.tax_rate}%) incluse:', f'{int(invoice.tax_amount):,} FCFA'],
-        ['TOTAL TTC:', f'{int(invoice.total_amount):,} FCFA']
+        ['TOTAL TTC:', f'{int(invoice.total_amount):,} FCFA'],
     ]
+    
+    if coverage > 0:
+        coverage_label = f'Prise en charge ({int(coverage)}%)'
+        if coverage_name:
+            coverage_label += f' - {coverage_name}'
+        totals_data.append([f'{coverage_label}:', f'-{coverage_amount:,} FCFA'])
+        totals_data.append(['MONTANT À PAYER:', f'{patient_amount:,} FCFA'])
     
     totals_table = Table(totals_data, colWidths=[12*cm, 6*cm])
     totals_table.setStyle(TableStyle([

@@ -32,6 +32,14 @@ class Payment(models.Model):
         validators=[MinValueValidator(Decimal('1'))],
         verbose_name="Montant (FCFA)"
     )
+    coverage_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        validators=[MinValueValidator(Decimal('0'))],
+        verbose_name="Prise en charge (%)"
+    )
+    coverage_name = models.CharField(max_length=255, blank=True, verbose_name="Nom de la prise en charge")
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, verbose_name="Mode de paiement")
     payment_date = models.DateTimeField(verbose_name="Date de paiement")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='completed', verbose_name="Statut")

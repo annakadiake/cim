@@ -35,6 +35,8 @@ const PatientDetail: React.FC = () => {
   const [paymentData, setPaymentData] = useState({
     invoice: 0,
     amount: '',
+    coverage_percentage: '',
+    coverage_name: '',
     payment_method: 'cash' as string,
     notes: '',
   });
@@ -119,6 +121,8 @@ const PatientDetail: React.FC = () => {
       await api.createPayment({
         invoice: paymentData.invoice,
         amount: Number(paymentData.amount),
+        coverage_percentage: paymentData.coverage_percentage ? Number(paymentData.coverage_percentage) : 0,
+        coverage_name: paymentData.coverage_name,
         payment_method: paymentData.payment_method as any,
         payment_date: new Date().toISOString(),
         status: 'completed',
@@ -126,7 +130,7 @@ const PatientDetail: React.FC = () => {
       } as any);
       toast.success('Paiement enregistré avec succès');
       setShowPaymentForm(false);
-      setPaymentData({ invoice: 0, amount: '', payment_method: 'cash', notes: '' });
+      setPaymentData({ invoice: 0, amount: '', coverage_percentage: '', coverage_name: '', payment_method: 'cash', notes: '' });
       fetchAll();
     } catch (error: any) {
       console.error('Erreur création paiement:', error);
@@ -519,7 +523,7 @@ const PatientDetail: React.FC = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-neutral-600 mb-1">Montant (FCFA) *</label>
                   <input
@@ -531,6 +535,39 @@ const PatientDetail: React.FC = () => {
                     min={1}
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-neutral-600 mb-1">Prise en charge (%)</label>
+                  <input
+                    type="number"
+                    value={paymentData.coverage_percentage}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || (Number(val) >= 0 && Number(val) <= 100)) {
+                        setPaymentData({ ...paymentData, coverage_percentage: val });
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a8345] focus:border-[#7a8345]"
+                    min={0}
+                    max={100}
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+
+              {paymentData.coverage_percentage && Number(paymentData.coverage_percentage) > 0 ? (
+                <div>
+                  <label className="block text-xs font-medium text-neutral-600 mb-1">Nom de la prise en charge</label>
+                  <input
+                    type="text"
+                    value={paymentData.coverage_name}
+                    onChange={(e) => setPaymentData({ ...paymentData, coverage_name: e.target.value })}
+                    className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a8345] focus:border-[#7a8345]"
+                    placeholder="Ex: Assurance Maladie, Mutuelle, Employeur..."
+                  />
+                </div>
+              ) : null}
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-neutral-600 mb-1">Mode de paiement *</label>
                   <select
@@ -598,6 +635,7 @@ const PatientDetail: React.FC = () => {
                       </div>
                       <p className="text-sm text-neutral-500 mt-1">
                         {new Date(payment.payment_date).toLocaleDateString('fr-FR')} • {payment.payment_method_display || payment.payment_method}
+                        {payment.coverage_percentage && Number(payment.coverage_percentage) > 0 ? ` • Prise en charge: ${payment.coverage_percentage}%${payment.coverage_name ? ` (${payment.coverage_name})` : ''}` : ''}
                         {payment.reference_number && ` • Réf: ${payment.reference_number}`}
                       </p>
                     </div>

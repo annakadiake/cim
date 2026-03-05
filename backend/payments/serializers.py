@@ -14,7 +14,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            'id', 'invoice', 'invoice_details', 'amount', 
+            'id', 'invoice', 'invoice_details', 'amount', 'coverage_percentage', 'coverage_name',
             'payment_method', 'payment_method_display', 'payment_date', 'status', 'status_display',
             'reference_number', 'transaction_id', 'receipt_number',
             'phone_number', 'operator_reference', 'notes', 
