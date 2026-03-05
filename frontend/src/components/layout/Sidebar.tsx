@@ -3,8 +3,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Users, 
   FileText, 
-  CreditCard, 
-  Stethoscope, 
   Settings, 
   LogOut,
   Home,
@@ -47,24 +45,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       href: '/patients',
       icon: Users,
       permission: 'patients',
-    },
-    {
-      label: 'Examens',
-      href: '/exams',
-      icon: Stethoscope,
-      permission: 'exams',
-    },
-    {
-      label: 'Factures',
-      href: '/invoices',
-      icon: FileText,
-      permission: 'invoices',
-    },
-    {
-      label: 'Paiements',
-      href: '/payments',
-      icon: CreditCard,
-      permission: 'payments',
     },
     {
       label: 'Comptes Rendus',
