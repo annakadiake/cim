@@ -105,14 +105,28 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             for item_data in items_data:
                 if isinstance(item_data, dict):
                     try:
-                        exam_type = ExamType.objects.get(id=item_data['exam_type'])
-                        quantity = item_data.get('quantity', 1)
-                        unit_price = item_data.get('unit_price', exam_type.price)
-                        total_price = item_data.get('total_price', unit_price * quantity)
+                        description = item_data.get('description', '')
+                        quantity = int(item_data.get('quantity', 1))
+                        unit_price = Decimal(str(item_data.get('unit_price', 0)))
+                        total_price = unit_price * quantity
+                        
+                        # Vérifier qu'on a au moins une description et un prix
+                        if not description and not item_data.get('exam_type'):
+                            raise serializers.ValidationError("Chaque item doit avoir une description ou un type d'examen")
+                        if unit_price <= 0:
+                            raise serializers.ValidationError("Le prix unitaire doit être supérieur à 0")
+                        
+                        # Si exam_type est fourni, l'utiliser
+                        exam_type = None
+                        if item_data.get('exam_type'):
+                            exam_type = ExamType.objects.get(id=item_data['exam_type'])
+                            if not description:
+                                description = exam_type.name
                         
                         InvoiceItem.objects.create(
                             invoice=invoice,
                             exam_type=exam_type,
+                            description=description,
                             quantity=quantity,
                             unit_price=unit_price,
                             total_price=total_price
@@ -121,9 +135,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
                         subtotal += total_price
                         
                     except ExamType.DoesNotExist:
-                        raise serializers.ValidationError(f"Type d'examen avec l'ID {item_data['exam_type']} introuvable")
-                    except KeyError as e:
-                        raise serializers.ValidationError(f"Le champ 'exam_type' est requis pour chaque item: {str(e)}")
+                        raise serializers.ValidationError(f"Type d'examen avec l'ID {item_data.get('exam_type')} introuvable")
                     except Exception as e:
                         raise serializers.ValidationError(f"Erreur lors de la création de l'item: {str(e)}")
             

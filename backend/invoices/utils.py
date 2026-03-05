@@ -129,7 +129,7 @@ def generate_pdf_invoice(invoice, patient_access_keys=None):
     # Table data
     for item in invoice.items.all():
         items_data.append([
-            item.exam_type.name,
+            item.description or (item.exam_type.name if item.exam_type else 'Article'),
             str(item.quantity),
             f'{int(item.unit_price):,}',
             f'{int(item.total_price):,}'

@@ -388,7 +388,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
   });
 
   const [items, setItems] = useState<Partial<InvoiceItem>[]>(
-    invoice?.items || [{ exam_type: 0, quantity: 1, unit_price: 0 }]
+    invoice?.items || [{ description: '', quantity: 1, unit_price: 0 }]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -408,7 +408,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
       total_amount: total_ttc,
       items: items.map((item, index) => ({
         id: item.id || index,
-        exam_type: item.exam_type || 0,
+        description: item.description || '',
         quantity: item.quantity || 1,
         unit_price: item.unit_price || 0,
         total_price: (item.unit_price || 0) * (item.quantity || 1)
@@ -428,21 +428,12 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
     setItems(prev => {
       const newItems = [...prev];
       newItems[index] = { ...newItems[index], [field]: value };
-      
-      // Auto-fill unit price when exam type is selected
-      if (field === 'exam_type') {
-        const examType = examTypes.find(et => et.id === Number(value));
-        if (examType) {
-          newItems[index].unit_price = examType.price;
-        }
-      }
-      
       return newItems;
     });
   };
 
   const addItem = () => {
-    setItems(prev => [...prev, { exam_type: 0, quantity: 1, unit_price: 0 }]);
+    setItems(prev => [...prev, { description: '', quantity: 1, unit_price: 0 }]);
   };
 
   const removeItem = (index: number) => {
@@ -526,20 +517,16 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ invoice, patients, examType
                     <div className="grid grid-cols-12 gap-2 items-end">
                       <div className="col-span-5">
                         <label className="block text-xs font-semibold text-[#7a8345] mb-1">
-                          Examen
+                          Nom de l'examen
                         </label>
-                        <select
-                          value={item.exam_type || 0}
-                          onChange={(e) => handleItemChange(index, 'exam_type', Number(e.target.value))}
+                        <input
+                          type="text"
+                          value={item.description || ''}
+                          onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                           className="w-full px-2 py-1.5 border border-[#7a8345]/20 rounded text-sm focus:ring-1 focus:ring-[#7a8345]/30"
-                        >
-                          <option value={0}>Sélectionner un examen</option>
-                          {examTypes.map(examType => (
-                            <option key={examType.id} value={examType.id}>
-                              {examType.name}
-                            </option>
-                          ))}
-                        </select>
+                          placeholder="Ex: Radiographie, Échographie..."
+                          required
+                        />
                       </div>
                       
                       <div className="col-span-2">

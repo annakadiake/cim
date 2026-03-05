@@ -2,14 +2,16 @@ from rest_framework import serializers
 from .models import Invoice, InvoiceItem
 from patients.serializers import PatientSerializer
 from exams.serializers import ExamTypeSerializer
+from exams.models import ExamType
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     exam_type_details = ExamTypeSerializer(source='exam_type', read_only=True)
+    exam_type = serializers.PrimaryKeyRelatedField(queryset=ExamType.objects.all(), required=False, allow_null=True)
     
     class Meta:
         model = InvoiceItem
         fields = [
-            'id', 'exam_type', 'exam_type_details', 
+            'id', 'exam_type', 'exam_type_details', 'description',
             'quantity', 'unit_price', 'total_price'
         ]
         read_only_fields = ['total_price']

@@ -74,8 +74,9 @@ export interface ExamType {
 // Types pour les factures
 export interface InvoiceItem {
   id: number;
-  exam_type: number;
+  exam_type?: number;
   exam_type_details?: ExamType;
+  description?: string;
   quantity: number;
   unit_price: number;
   total_price: number;

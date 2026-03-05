@@ -27,7 +27,7 @@ const PatientDetail: React.FC = () => {
 
   // Formulaire facture
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
-  const [invoiceItems, setInvoiceItems] = useState<{ exam_type: number; quantity: number }[]>([{ exam_type: 0, quantity: 1 }]);
+  const [invoiceItems, setInvoiceItems] = useState<{ description: string; unit_price: number; quantity: number }[]>([{ description: '', unit_price: 0, quantity: 1 }]);
   const [invoiceNotes, setInvoiceNotes] = useState('');
 
   // Formulaire paiement
@@ -80,9 +80,9 @@ const PatientDetail: React.FC = () => {
   
   const handleCreateInvoice = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validItems = invoiceItems.filter(i => i.exam_type > 0);
+    const validItems = invoiceItems.filter(i => i.description.trim() !== '' && i.unit_price > 0);
     if (validItems.length === 0) {
-      toast.error('Ajoutez au moins un examen');
+      toast.error('Ajoutez au moins un examen avec un nom et un prix');
       return;
     }
     try {
@@ -100,7 +100,7 @@ const PatientDetail: React.FC = () => {
       } as any);
       toast.success('Facture créée avec succès');
       setShowInvoiceForm(false);
-      setInvoiceItems([{ exam_type: 0, quantity: 1 }]);
+      setInvoiceItems([{ description: '', unit_price: 0, quantity: 1 }]);
       setInvoiceNotes('');
       fetchAll();
     } catch (error: any) {
@@ -340,24 +340,37 @@ const PatientDetail: React.FC = () => {
               {invoiceItems.map((item, idx) => (
                 <div key={idx} className="flex gap-3 items-end">
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-neutral-600 mb-1">Examen</label>
-                    <select
-                      value={item.exam_type}
+                    <label className="block text-xs font-medium text-neutral-600 mb-1">Nom de l'examen</label>
+                    <input
+                      type="text"
+                      value={item.description}
                       onChange={(e) => {
                         const newItems = [...invoiceItems];
-                        newItems[idx].exam_type = Number(e.target.value);
+                        newItems[idx].description = e.target.value;
                         setInvoiceItems(newItems);
                       }}
                       className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a8345] focus:border-[#7a8345]"
+                      placeholder="Ex: Radiographie, Échographie..."
                       required
-                    >
-                      <option value={0}>Sélectionner un examen</option>
-                      {examTypes.filter(e => e.is_active).map(e => (
-                        <option key={e.id} value={e.id}>{e.name} - {e.price} FCFA</option>
-                      ))}
-                    </select>
+                    />
                   </div>
-                  <div className="w-24">
+                  <div className="w-32">
+                    <label className="block text-xs font-medium text-neutral-600 mb-1">Prix (FCFA)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={item.unit_price || ''}
+                      onChange={(e) => {
+                        const newItems = [...invoiceItems];
+                        newItems[idx].unit_price = Number(e.target.value);
+                        setInvoiceItems(newItems);
+                      }}
+                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a8345] focus:border-[#7a8345]"
+                      placeholder="0"
+                      required
+                    />
+                  </div>
+                  <div className="w-20">
                     <label className="block text-xs font-medium text-neutral-600 mb-1">Qté</label>
                     <input
                       type="number"
@@ -385,7 +398,7 @@ const PatientDetail: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setInvoiceItems([...invoiceItems, { exam_type: 0, quantity: 1 }])}
+                onClick={() => setInvoiceItems([...invoiceItems, { description: '', unit_price: 0, quantity: 1 }])}
                 className="text-sm text-[#7a8345] hover:underline"
               >
                 + Ajouter un examen

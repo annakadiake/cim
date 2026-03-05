@@ -128,7 +128,8 @@ class Invoice(models.Model):
 
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='items', on_delete=models.CASCADE)
-    exam_type = models.ForeignKey(ExamType, on_delete=models.CASCADE, verbose_name="Type d'examen")
+    exam_type = models.ForeignKey(ExamType, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Type d'examen")
+    description = models.CharField(max_length=255, blank=True, verbose_name="Description")
     quantity = models.PositiveIntegerField(default=1, verbose_name="Quantité")
     unit_price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="Prix unitaire")
     total_price = models.DecimalField(max_digits=12, decimal_places=0, verbose_name="Prix total")
@@ -158,4 +159,5 @@ class InvoiceItem(models.Model):
                 print(f"Erreur lors de la mise à jour du sous-total: {e}")
     
     def __str__(self):
-        return f"{self.exam_type.name} x{self.quantity}"
+        name = self.description or (self.exam_type.name if self.exam_type else 'Article')
+        return f"{name} x{self.quantity}"
