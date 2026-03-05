@@ -12,7 +12,7 @@ class Patient(models.Model):
         ('F', 'Féminin'),
     ]
     
-    patient_id = models.CharField(max_length=6, unique=True, editable=False, default='TEMP', verbose_name="ID Patient")
+    patient_id = models.CharField(max_length=6, unique=True, editable=False, null=True, blank=True, verbose_name="ID Patient")
     first_name = models.CharField(max_length=100, verbose_name="Prénom")
     last_name = models.CharField(max_length=100, verbose_name="Nom")
     age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Âge")
