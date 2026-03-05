@@ -59,6 +59,21 @@ class PaymentViewSet(viewsets.ModelViewSet):
             print(f"Données reçues: {self.request.data}")
             raise
     
+    def perform_destroy(self, instance):
+        invoice = instance.invoice
+        instance.delete()
+        # Recalculer le statut de la facture après suppression
+        total_payments = invoice.payments.filter(status='completed').aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+        if total_payments >= invoice.total_amount:
+            invoice.status = 'paid'
+        elif total_payments > 0:
+            invoice.status = 'partially_paid'
+        else:
+            invoice.status = 'sent'
+        invoice.save(update_fields=['status', 'updated_at'])
+    
     @action(detail=False, methods=['get'])
     def summary(self, request):
         """Statistiques des paiements avec filtrage par période"""
