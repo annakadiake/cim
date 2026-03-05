@@ -409,14 +409,13 @@ const PatientModal: React.FC<PatientModalProps> = ({ patient, onClose, onSubmit 
             
             <div>
               <label className="block text-xs font-semibold text-neutral-800 mb-1">
-                Téléphone *
+                Téléphone
               </label>
               <input
                 type="tel"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-[#5a6332]/20 rounded-lg focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all text-sm"
                 placeholder="+221 XX XXX XX XX"
               />

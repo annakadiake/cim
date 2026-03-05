@@ -22,7 +22,7 @@ class Patient(models.Model):
         regex=r'^\+?1?\d{8,15}$',
         message="Le numéro de téléphone doit être au format: '+999999999'. Jusqu'à 15 chiffres autorisés."
     )
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True, verbose_name="Téléphone")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True, verbose_name="Téléphone")
     
     address = models.TextField(blank=True, verbose_name="Adresse")
     email = models.EmailField(blank=True, null=True, default='', verbose_name="Email")
