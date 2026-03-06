@@ -238,7 +238,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             pdf_content = generate_pdf_invoice(invoice, patient_access_keys)
             
             response = HttpResponse(pdf_content, content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="facture_{invoice.invoice_number}.pdf"'
+            response['Content-Disposition'] = f'attachment; filename="facture_{invoice.invoice_number}_{invoice.patient.full_name.replace(" ", "_")}.pdf"'
             return response
         except Exception as e:
             print(f"Erreur lors de la génération du PDF: {e}")

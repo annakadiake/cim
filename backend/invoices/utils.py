@@ -44,7 +44,7 @@ def _build_invoice_story(invoice, patient_access_keys=None):
     story = []
     logo = _get_logo()
     
-    # Header compact
+    # Header compact avec alignement parfait
     right_info = (
         f'<b>Facture N°:</b> {invoice.invoice_number}<br/>'
         f'<b>Date:</b> {invoice.invoice_date.strftime("%d/%m/%Y")}'
@@ -72,8 +72,12 @@ def _build_invoice_story(invoice, patient_access_keys=None):
         header_table = Table(header_data, colWidths=[10*cm, 8*cm])
     
     header_table.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('ALIGN', (-1, 0), (-1, -1), 'RIGHT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alignement vertical au milieu
+        ('ALIGN', (0, 0), (0, -1), 'CENTER'),   # Logo centré
+        ('ALIGN', (1, 0), (1, -1), 'LEFT'),     # Infos CIMEF à gauche
+        ('ALIGN', (-1, 0), (-1, -1), 'RIGHT'),  # Numéro/date à droite
+        ('TOPPADDING', (0, 0), (-1, -1), 8),    # Padding supérieur
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8), # Padding inférieur
     ]))
     story.append(header_table)
     story.append(Spacer(1, 4*mm))
