@@ -72,13 +72,16 @@ const Users: React.FC = () => {
     e.preventDefault();
     try {
       if (editingUser) {
-        if (editingUser.role === 'superuser') {
-          const superData: Record<string, string> = { username: formData.username };
-          if (formData.password) superData.password = formData.password;
-          await api.updateUser(editingUser.id, superData);
-        } else {
-          await api.updateUser(editingUser.id, formData);
-        }
+        const updateData: Record<string, any> = {};
+        if (formData.username) updateData.username = formData.username;
+        if (formData.email) updateData.email = formData.email;
+        if (formData.first_name) updateData.first_name = formData.first_name;
+        if (formData.last_name) updateData.last_name = formData.last_name;
+        if (formData.role) updateData.role = formData.role;
+        updateData.department = formData.department || '';
+        updateData.is_active = formData.is_active;
+        if (formData.password) updateData.password = formData.password;
+        await api.updateUser(editingUser.id, updateData);
       } else {
         await api.createUser(formData);
       }
@@ -350,7 +353,7 @@ const Users: React.FC = () => {
                       >
                         <Edit className="h-4 w-4" />
                       </button>
-                      {user.id !== currentUser?.id && user.role !== 'superuser' && (
+                      {user.id !== currentUser?.id && (
                         <button
                           onClick={() => handleDelete(user.id)}
                           className="text-red-600 hover:text-red-900 p-1"
@@ -371,7 +374,7 @@ const Users: React.FC = () => {
       {/* Modal de création/édition */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl w-full max-w-md shadow-2xl border border-[#7a8345]/20 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          <div key={editingUser ? `edit-${editingUser.id}` : 'create'} className="bg-white/95 backdrop-blur-sm rounded-xl w-full max-w-md shadow-2xl border border-[#7a8345]/20 overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gradient-to-r from-[#7a8345]/10 to-[#5a6332]/10 px-5 py-3 border-b border-[#7a8345]/20">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#7a8345] to-[#5a6332] rounded-lg flex items-center justify-center">
@@ -383,46 +386,15 @@ const Users: React.FC = () => {
               </div>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-3 px-5 py-4">
-              {/* Formulaire réduit pour le superuser : uniquement username et mot de passe */}
-              {editingUser?.role === 'superuser' ? (
-                <>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
-                      Nom d'utilisateur
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.username}
-                      onChange={(e) => setFormData({...formData, username: e.target.value})}
-                      className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
-                      Nouveau mot de passe
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
-                        onChange={(e) => setFormData({...formData, password: e.target.value})}
-                        className="w-full px-3 py-2 pr-10 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
-                        placeholder="Laisser vide pour ne pas changer"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 hover:text-[#7a8345]"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
-                </>
-              ) : (
+            <form onSubmit={handleSubmit} className="space-y-3 px-5 py-4" autoComplete="off">
+                {/* Champs cachés pour piéger l'autocomplete du navigateur */}
+                <div aria-hidden="true" style={{ position: 'absolute', opacity: 0, height: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+                  <input type="text" name="first_name" tabIndex={-1} />
+                  <input type="text" name="last_name" tabIndex={-1} />
+                  <input type="text" name="username" tabIndex={-1} />
+                  <input type="email" name="email" tabIndex={-1} />
+                  <input type="password" name="password" tabIndex={-1} />
+                </div>
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -431,10 +403,12 @@ const Users: React.FC = () => {
                       </label>
                       <input
                         type="text"
+                        name="usr-fname-x"
                         value={formData.first_name}
                         onChange={(e) => setFormData({...formData, first_name: e.target.value})}
                         className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
-                        required
+                        autoComplete="one-time-code"
+                        required={!editingUser}
                       />
                     </div>
                     <div>
@@ -443,10 +417,12 @@ const Users: React.FC = () => {
                       </label>
                       <input
                         type="text"
+                        name="usr-lname-x"
                         value={formData.last_name}
                         onChange={(e) => setFormData({...formData, last_name: e.target.value})}
                         className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
-                        required
+                        autoComplete="one-time-code"
+                        required={!editingUser}
                       />
                     </div>
                   </div>
@@ -457,9 +433,11 @@ const Users: React.FC = () => {
                     </label>
                     <input
                       type="text"
+                      name="usr-uname-x"
                       value={formData.username}
                       onChange={(e) => setFormData({...formData, username: e.target.value})}
                       className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
+                      autoComplete="one-time-code"
                       required
                     />
                   </div>
@@ -470,36 +448,38 @@ const Users: React.FC = () => {
                     </label>
                     <input
                       type="email"
+                      name="usr-email-x"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
+                      autoComplete="one-time-code"
                       required
                     />
                   </div>
 
-                  {!editingUser && (
-                    <div>
-                      <label className="block text-xs font-semibold text-[#5a6332] mb-1">
-                        Mot de passe
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? 'text' : 'password'}
-                          value={formData.password}
-                          onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="w-full px-3 py-2 pr-10 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 hover:text-[#7a8345]"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#5a6332] mb-1">
+                      {editingUser ? 'Nouveau mot de passe' : 'Mot de passe'}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password}
+                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                        className="w-full px-3 py-2 pr-10 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
+                        placeholder={editingUser ? 'Laisser vide pour ne pas changer' : ''}
+                        autoComplete="new-password"
+                        required={!editingUser}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a8345]/50 hover:text-[#7a8345]"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
                     </div>
-                  )}
+                  </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -544,7 +524,6 @@ const Users: React.FC = () => {
                     </label>
                   </div>
                 </>
-              )}
 
               <div className="flex justify-end gap-2 pt-3">
                 <button

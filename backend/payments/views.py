@@ -29,9 +29,9 @@ class IsPaymentPermission(BasePermission):
         if user.role == 'accountant':
             return True
         
-        # Les secrétaires peuvent créer et lire les paiements
+        # Les secrétaires peuvent créer et lire les paiements (pas modifier ni supprimer)
         if user.role == 'secretary':
-            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+            return request.method in ['GET', 'POST', 'HEAD', 'OPTIONS']
             
         # Les docteurs peuvent seulement lire
         if user.role == 'doctor':

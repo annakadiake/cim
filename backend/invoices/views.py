@@ -27,9 +27,9 @@ class IsInvoicePermission(BasePermission):
         if user.role in ['superuser', 'admin']:
             return True
         
-        # Les secrétaires peuvent créer et lire les factures
+        # Les secrétaires peuvent créer et lire les factures (pas modifier ni supprimer)
         if user.role == 'secretary':
-            return request.method in ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS']
+            return request.method in ['GET', 'POST', 'HEAD', 'OPTIONS']
         
         # Les comptables ont accès complet aux factures
         if user.role == 'accountant':
