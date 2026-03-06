@@ -116,20 +116,7 @@ export const LoginForm: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Bouton Voir le site */}
-        <div className="mt-6">
-          <a
-            href="https://cimef.online/website"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            <span className="text-xl">🌐</span>
-            <span className="text-lg">VOIR LE SITE CIMEF</span>
-            <span className="text-xl">→</span>
-          </a>
-        </div>
-
+        
         {/* Lien vers portail patient */}
         <div className="mt-6 text-center">
           <p className="text-sm text-neutral-600 mb-2">
