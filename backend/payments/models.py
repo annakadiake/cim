@@ -32,6 +32,13 @@ class Payment(models.Model):
         validators=[MinValueValidator(Decimal('1'))],
         verbose_name="Montant (FCFA)"
     )
+    discount = models.DecimalField(
+        max_digits=12,
+        decimal_places=0,
+        default=0,
+        validators=[MinValueValidator(Decimal('0'))],
+        verbose_name="Remise (FCFA)"
+    )
     coverage_percentage = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -86,12 +93,22 @@ class Payment(models.Model):
         total_payments = self.invoice.payments.filter(status='completed').aggregate(
             total=models.Sum('amount')
         )['total'] or 0
-        return max(0, self.invoice.total_amount - total_payments)
+        total_discounts = self.invoice.payments.filter(status='completed').aggregate(
+            total=models.Sum('discount')
+        )['total'] or 0
+        return max(0, self.invoice.total_amount - total_payments + total_discounts)
     
     @property
     def is_partial_payment(self):
-        """Vérifie si c'est un paiement partiel"""
-        return self.amount < self.invoice.total_amount
+        """Vérifie si c'est un paiement partiel (en tenant compte des remises)"""
+        total_payments = self.invoice.payments.filter(status='completed').aggregate(
+            total=models.Sum('amount')
+        )['total'] or 0
+        total_discounts = self.invoice.payments.filter(status='completed').aggregate(
+            total=models.Sum('discount')
+        )['total'] or 0
+        net_amount = total_payments - total_discounts
+        return net_amount < self.invoice.total_amount
     
     def generate_receipt_number(self):
         """Génère un numéro de reçu unique"""
@@ -123,16 +140,27 @@ class Payment(models.Model):
         self.update_invoice_status()
     
     def update_invoice_status(self):
-        """Met à jour le statut de la facture en fonction des paiements"""
+        """Met à jour le statut de la facture en fonction des paiements et remises"""
         total_payments = self.invoice.payments.filter(status='completed').aggregate(
             total=models.Sum('amount')
         )['total'] or 0
+        total_discounts = self.invoice.payments.filter(status='completed').aggregate(
+            total=models.Sum('discount')
+        )['total'] or 0
         
-        if total_payments >= self.invoice.total_amount:
+        net_amount = total_payments - total_discounts
+        invoice_total = self.invoice.total_amount
+        
+        # Debug logging
+        print(f"Facture {self.invoice.invoice_number}: Total={invoice_total}, Payé={total_payments}, Remise={total_discounts}, Net={net_amount}")
+        
+        # Logique corrigée: si le montant payé >= montant total de la facture = paid
+        if total_payments >= invoice_total:
             self.invoice.status = 'paid'
-        elif total_payments > 0:
+        elif net_amount > 0:
             self.invoice.status = 'partially_paid'
         else:
             self.invoice.status = 'sent'
         
+        print(f"Statut mis à jour: {self.invoice.status}")
         self.invoice.save(update_fields=['status', 'updated_at'])

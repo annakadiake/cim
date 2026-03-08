@@ -111,6 +111,7 @@ export interface Payment {
   invoice: number;
   invoice_details?: Invoice;
   amount: number;
+  discount?: number;
   coverage_percentage?: number;
   coverage_name?: string;
   payment_method: 'cash' | 'check' | 'bank_transfer' | 'mobile_money' | 'orange_money' | 'wave' | 'free_money' | 'credit_card';

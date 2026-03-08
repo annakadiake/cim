@@ -103,17 +103,46 @@ def _build_invoice_story(invoice, patient_access_keys=None):
     story.append(Spacer(1, 4*mm))
     
     # Items table compact
-    items_data = [['Examen', 'Qté', 'Prix unit. (FCFA)', 'Total (FCFA)']]
-    for item in invoice.items.all():
+    items_data = [['Examen', 'Qté', 'Prix unit. (FCFA)', 'Remise (FCFA)', 'Total (FCFA)']]
+    
+    # Récupérer la remise totale une seule fois
+    from payments.models import Payment
+    payments_with_discount = Payment.objects.filter(invoice=invoice.id, discount__gt=0, status='completed')
+    total_discount = sum(p.discount for p in payments_with_discount) if payments_with_discount else 0
+    
+    # Calculer la répartition de la remise
+    items_list = list(invoice.items.all())
+    remaining_discount = total_discount
+    
+    for i, item in enumerate(items_list):
+        # Calculer la remise pour cet article
+        discount = 0
+        try:
+            if total_discount > 0 and invoice.total_amount > 0:
+                invoice_total = float(invoice.total_amount)
+                item_total = float(item.total_price)
+                
+                # Pour le dernier article, mettre toute la remise restante
+                if i == len(items_list) - 1:
+                    discount = remaining_discount
+                else:
+                    # Calcul proportionnel pour les autres articles
+                    discount = round((item_total / invoice_total) * total_discount)
+                    remaining_discount -= discount
+                    
+        except Exception:
+            pass
+        
         items_data.append([
             Paragraph(item.description or (item.exam_type.name if item.exam_type else 'Article'),
                       ParagraphStyle('ItemDesc', parent=styles['Normal'], fontSize=7, leading=9)),
             str(item.quantity),
             f'{int(item.unit_price):,}',
+            f'{discount:,}' if discount > 0 else '0',
             f'{int(item.total_price):,}'
         ])
     
-    items_table = Table(items_data, colWidths=[7.5*cm, 1.5*cm, 4.5*cm, 4.5*cm])
+    items_table = Table(items_data, colWidths=[6*cm, 1.5*cm, 3.5*cm, 3.5*cm, 3.5*cm])
     items_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#636B2F')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -136,16 +165,21 @@ def _build_invoice_story(invoice, patient_access_keys=None):
     # Coverage
     coverage = 0
     coverage_name = ''
+    total_discount = 0
     try:
         last_payment = invoice.payments.filter(status='completed', coverage_percentage__gt=0).order_by('-created_at').first()
         if last_payment:
             coverage = float(last_payment.coverage_percentage)
             coverage_name = last_payment.coverage_name or ''
+        
+        # Calculer la remise totale
+        discount_payments = invoice.payments.filter(status='completed', discount__gt=0)
+        total_discount = sum(p.discount for p in discount_payments) if discount_payments else 0
     except Exception:
         pass
     
     coverage_amount = int(float(invoice.total_amount) * coverage / 100) if coverage > 0 else 0
-    patient_amount = int(float(invoice.total_amount)) - coverage_amount
+    patient_amount = int(float(invoice.total_amount)) - coverage_amount - total_discount
     
     # Totals compact
     totals_data = [
@@ -153,24 +187,48 @@ def _build_invoice_story(invoice, patient_access_keys=None):
         [f'TVA ({invoice.tax_rate}%) incluse:', f'{int(invoice.tax_amount):,} FCFA'],
         ['TOTAL TTC:', f'{int(invoice.total_amount):,} FCFA'],
     ]
+    
+    # Ajouter la remise avec style spécial
+    if total_discount > 0:
+        totals_data.append(['💰 REMISE APPLIQUÉE:', f'-{total_discount:,} FCFA'])
+    
     if coverage > 0:
         coverage_label = f'Prise en charge ({int(coverage)}%)'
         if coverage_name:
             coverage_label += f' - {coverage_name}'
         totals_data.append([f'{coverage_label}:', f'-{coverage_amount:,} FCFA'])
-        totals_data.append(['MONTANT À PAYER:', f'{patient_amount:,} FCFA'])
+    
+    # Toujours afficher le montant à payer
+    totals_data.append(['MONTANT À PAYER:', f'{patient_amount:,} FCFA'])
+    
+    # Calculer l'index de la ligne de remise pour le style spécial
+    discount_row_index = -1
+    if total_discount > 0:
+        discount_row_index = 3  # Après Montant HT, TVA, TOTAL TTC
     
     totals_table = Table(totals_data, colWidths=[12*cm, 6*cm])
     totals_style = [
         ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
         ('FONTNAME', (0, 0), (-1, -2), 'Helvetica'),
-        ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 8),
         ('TOPPADDING', (0, 0), (-1, -1), 2),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+    ]
+    
+    # Style spécial pour la ligne de remise
+    if discount_row_index >= 0:
+        totals_style.extend([
+            ('TEXTCOLOR', (0, discount_row_index), (-1, discount_row_index), colors.white),
+            ('FONTNAME', (0, discount_row_index), (-1, discount_row_index), 'Helvetica-Bold'),
+            ('BACKGROUND', (0, discount_row_index), (-1, discount_row_index), colors.HexColor('#7a8345')),
+        ])
+    
+    # Style pour la dernière ligne (MONTANT À PAYER)
+    totals_style.extend([
+        ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
         ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor('#3F4A1F')),
         ('LINEABOVE', (0, -1), (-1, -1), 1.5, colors.HexColor('#3F4A1F')),
-    ]
+    ])
     totals_table.setStyle(TableStyle(totals_style))
     story.append(totals_table)
     story.append(Spacer(1, 3*mm))

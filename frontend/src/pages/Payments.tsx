@@ -45,6 +45,7 @@ export const Payments: React.FC = () => {
   const [formData, setFormData] = useState({
     invoice: '',
     amount: '',
+    discount: '',
     payment_method: 'cash' as Payment['payment_method'],
     payment_date: new Date().toISOString().split('T')[0],
     status: 'completed' as Payment['status'],
@@ -128,6 +129,7 @@ export const Payments: React.FC = () => {
         ...formData,
         invoice: parseInt(formData.invoice),
         amount: parseInt(formData.amount),
+        discount: formData.discount ? parseInt(formData.discount) : 0,
         payment_date: new Date(formData.payment_date).toISOString()
       };
 
@@ -155,6 +157,7 @@ export const Payments: React.FC = () => {
     setFormData({
       invoice: payment.invoice.toString(),
       amount: payment.amount.toString(),
+      discount: payment.discount?.toString() || '',
       payment_method: payment.payment_method,
       payment_date: payment.payment_date.split('T')[0],
       status: payment.status,
@@ -191,6 +194,7 @@ export const Payments: React.FC = () => {
     setFormData({
       invoice: '',
       amount: '',
+      discount: '',
       payment_method: 'cash' as Payment['payment_method'],
       payment_date: new Date().toISOString().split('T')[0],
       status: 'completed' as Payment['status'],
@@ -617,6 +621,23 @@ export const Payments: React.FC = () => {
                         Montant restant dû calculé automatiquement
                       </p>
                     )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#7a8345] mb-1">
+                      Remise (FCFA) - Optionnel
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.discount}
+                      onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                      min="0"
+                      className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
+                      placeholder="0 si aucune remise"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Laisser vide ou mettre 0 si aucune remise
+                    </p>
                   </div>
 
                   <div>

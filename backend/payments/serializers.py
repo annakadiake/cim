@@ -14,7 +14,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            'id', 'invoice', 'invoice_details', 'amount', 'coverage_percentage', 'coverage_name',
+            'id', 'invoice', 'invoice_details', 'amount', 'discount', 'coverage_percentage', 'coverage_name',
             'payment_method', 'payment_method_display', 'payment_date', 'status', 'status_display',
             'reference_number', 'transaction_id', 'receipt_number',
             'phone_number', 'operator_reference', 'notes', 
@@ -29,6 +29,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             # En cas de modification
             invoice = self.instance.invoice
             current_payment_amount = self.instance.amount if self.instance.status == 'completed' else 0
+            current_discount = self.instance.discount if self.instance.status == 'completed' else 0
         else:
             # En cas de création
             invoice_id = self.initial_data.get('invoice')
@@ -39,6 +40,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                 from invoices.models import Invoice
                 invoice = Invoice.objects.get(id=invoice_id)
                 current_payment_amount = 0
+                current_discount = 0
             except Invoice.DoesNotExist:
                 raise serializers.ValidationError("Facture introuvable.")
         
@@ -47,7 +49,12 @@ class PaymentSerializer(serializers.ModelSerializer):
             id=self.instance.id if self.instance else None
         ).aggregate(total=Sum('amount'))['total'] or 0
         
-        remaining = invoice.total_amount - total_payments
+        # Calculer la remise totale (excluant le paiement actuel)
+        total_discounts = invoice.payments.filter(status='completed').exclude(
+            id=self.instance.id if self.instance else None
+        ).aggregate(total=Sum('discount'))['total'] or 0
+        
+        remaining = invoice.total_amount - total_payments + total_discounts
         
         if value > remaining:
             raise serializers.ValidationError(

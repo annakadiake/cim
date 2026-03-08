@@ -35,6 +35,7 @@ const PatientDetail: React.FC = () => {
   const [paymentData, setPaymentData] = useState({
     invoice: 0,
     amount: '',
+    discount: '',
     coverage_percentage: '',
     coverage_name: '',
     payment_method: 'cash' as string,
@@ -118,6 +119,7 @@ const PatientDetail: React.FC = () => {
       await api.createPayment({
         invoice: paymentData.invoice,
         amount: Number(paymentData.amount),
+        discount: paymentData.discount ? Number(paymentData.discount) : 0,
         coverage_percentage: paymentData.coverage_percentage ? Number(paymentData.coverage_percentage) : 0,
         coverage_name: paymentData.coverage_name,
         payment_method: paymentData.payment_method as any,
@@ -127,7 +129,7 @@ const PatientDetail: React.FC = () => {
       } as any);
       toast.success('Paiement enregistré avec succès');
       setShowPaymentForm(false);
-      setPaymentData({ invoice: 0, amount: '', coverage_percentage: '', coverage_name: '', payment_method: 'cash', notes: '' });
+      setPaymentData({ invoice: 0, amount: '', discount: '', coverage_percentage: '', coverage_name: '', payment_method: 'cash', notes: '' });
       fetchAll();
     } catch (error: any) {
       console.error('Erreur création paiement:', error);
@@ -564,7 +566,7 @@ const PatientDetail: React.FC = () => {
                     </select>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Montant (FCFA) *</label>
                       <input
@@ -574,6 +576,17 @@ const PatientDetail: React.FC = () => {
                         className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-[#7a8345]/20 focus:border-[#7a8345] outline-none bg-white transition-all"
                         required
                         min={1}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Remise (FCFA)</label>
+                      <input
+                        type="number"
+                        value={paymentData.discount}
+                        onChange={(e) => setPaymentData({ ...paymentData, discount: e.target.value })}
+                        className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-[#7a8345]/20 focus:border-[#7a8345] outline-none bg-white transition-all"
+                        min={0}
+                        placeholder="0"
                       />
                     </div>
                     <div>
@@ -658,6 +671,7 @@ const PatientDetail: React.FC = () => {
                       <tr className="bg-neutral-50 text-left">
                         <th className="px-4 py-2.5 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">Date</th>
                         <th className="px-4 py-2.5 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider text-right">Montant</th>
+                        <th className="px-4 py-2.5 text-[11px] font-semibold text-[#7a8345] uppercase tracking-wider text-right">Remise</th>
                         <th className="px-4 py-2.5 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">Mode</th>
                         <th className="px-4 py-2.5 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">Prise en charge</th>
                         <th className="px-4 py-2.5 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider text-center">Statut</th>
@@ -672,6 +686,15 @@ const PatientDetail: React.FC = () => {
                           <tr key={payment.id} className="hover:bg-neutral-50/50 transition-colors">
                             <td className="px-4 py-3 text-neutral-600">{new Date(payment.payment_date).toLocaleDateString('fr-FR')}</td>
                             <td className="px-4 py-3 text-right font-semibold text-neutral-800">{Number(payment.amount).toLocaleString('fr-FR')} FCFA</td>
+                            <td className="px-4 py-3 text-right">
+                              {payment.discount && Number(payment.discount) > 0 ? (
+                                <span className="inline-flex text-xs px-2 py-0.5 rounded-full font-medium border bg-[#7a8345]/10 text-[#7a8345] border-[#7a8345]/20">
+                                  -{Number(payment.discount).toLocaleString('fr-FR')} FCFA
+                                </span>
+                              ) : (
+                                <span className="text-neutral-300">—</span>
+                              )}
+                            </td>
                             <td className="px-4 py-3 text-neutral-600">{payment.payment_method_display || payment.payment_method}</td>
                             <td className="px-4 py-3 text-neutral-500">
                               {payment.coverage_percentage && Number(payment.coverage_percentage) > 0 
