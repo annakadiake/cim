@@ -235,7 +235,8 @@ def _build_invoice_story(invoice, patient_access_keys=None):
     
     # Footer compact
     footer = Paragraph(
-        '<b>Merci de votre confiance!</b> — Paiement par espèces, chèque ou virement bancaire.',
+        '<b>Merci de votre confiance!</b> — Paiement par espèces, chèque ou virement bancaire.<br/>'
+        '<b>RCCM:</b> SN.THIES.2025.B.6374 &nbsp;&nbsp; <b>NINEA:</b> 012704070',
         ParagraphStyle('Footer', parent=styles['Normal'], fontSize=7, alignment=TA_CENTER,
                        textColor=colors.HexColor('#6b7280'))
     )
