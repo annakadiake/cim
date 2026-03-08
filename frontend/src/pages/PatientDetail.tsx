@@ -570,9 +570,12 @@ const PatientDetail: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Montant (FCFA) *</label>
                       <input
-                        type="number"
+                        type="text"
                         value={paymentData.amount}
-                        onChange={(e) => setPaymentData({ ...paymentData, amount: e.target.value })}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, '');
+                          setPaymentData({ ...paymentData, amount: value });
+                        }}
                         className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-[#7a8345]/20 focus:border-[#7a8345] outline-none bg-white transition-all"
                         required
                         min={1}
@@ -581,9 +584,12 @@ const PatientDetail: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Remise (FCFA)</label>
                       <input
-                        type="number"
+                        type="text"
                         value={paymentData.discount}
-                        onChange={(e) => setPaymentData({ ...paymentData, discount: e.target.value })}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, '');
+                          setPaymentData({ ...paymentData, discount: value });
+                        }}
                         className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-[#7a8345]/20 focus:border-[#7a8345] outline-none bg-white transition-all"
                         min={0}
                         placeholder="0"
@@ -592,10 +598,10 @@ const PatientDetail: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-1.5">Prise en charge (%)</label>
                       <input
-                        type="number"
+                        type="text"
                         value={paymentData.coverage_percentage}
                         onChange={(e) => {
-                          const val = e.target.value;
+                          const val = e.target.value.replace(/[^0-9]/g, '');
                           if (val === '' || (Number(val) >= 0 && Number(val) <= 100)) {
                             setPaymentData({ ...paymentData, coverage_percentage: val });
                           }

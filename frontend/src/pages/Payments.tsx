@@ -608,9 +608,12 @@ export const Payments: React.FC = () => {
                       Montant (FCFA) *
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.amount}
-                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        setFormData({ ...formData, amount: value });
+                      }}
                       required
                       min="1"
                       className="w-full px-3 py-2 border border-[#5a6332]/20 rounded-lg focus:ring-2 focus:ring-[#5a6332]/30 focus:border-[#5a6332] transition-all text-sm"
@@ -628,9 +631,12 @@ export const Payments: React.FC = () => {
                       Remise (FCFA) - Optionnel
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.discount}
-                      onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        setFormData({ ...formData, discount: value });
+                      }}
                       min="0"
                       className="w-full px-3 py-2 border border-[#7a8345]/20 rounded-lg focus:ring-2 focus:ring-[#7a8345]/30 focus:border-[#7a8345] transition-all text-sm"
                       placeholder="0 si aucune remise"
